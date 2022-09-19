@@ -8,6 +8,9 @@ class Treat(models.Model):
     recipe_link = models.URLField(default="no recipe has been linked yet")
     picture_link = models.URLField(default="no pciture has been linked yet")
 
+    def __str__(self):
+        return self.name
+
 
 class Note(models.Model):
     treat = models.ForeignKey(Treat, on_delete=models.CASCADE)

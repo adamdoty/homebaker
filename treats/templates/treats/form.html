@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <form action="{% url "treats:treat_list" %}" method="post" class="form">
+    <form action="{% url "treats:treat_new" %}" method="post" class="form">
         {% csrf_token %}
         {% bootstrap_form form %}
         {% buttons %}
