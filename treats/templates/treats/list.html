@@ -1,0 +1,15 @@
+{% extends "treats/base.html" %}
+
+{% block title %}My Treats Catalogue{% endblock %}
+
+{% block content %}
+
+    {% for treat in treats %}
+        <h2>
+            {{ treat.name }}
+        </h2>
+
+        {#<img src="{{ treat.picture_link }}">#}
+    {% endfor %}
+
+{% endblock %}

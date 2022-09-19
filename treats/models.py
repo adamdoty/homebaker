@@ -5,8 +5,8 @@ from django.utils import timezone
 
 class Treat(models.Model):
     name = models.CharField(max_length=250)
-    recipe_link = models.URLField()
-    picture = models.ImageField()
+    recipe_link = models.URLField(default="no recipe has been linked yet")
+    picture_link = models.URLField(default="no pciture has been linked yet")
 
 
 class Note(models.Model):
