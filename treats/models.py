@@ -13,15 +13,20 @@ class Treat(models.Model):
 
 
 class Note(models.Model):
-    treat = models.ForeignKey(Treat, on_delete=models.CASCADE)
+    treat = models.ForeignKey(Treat, on_delete=models.CASCADE, related_name='notes')
     body = models.TextField()
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.body[:50]
+    class Meta:
+        ordering = ['created']
+        indexes = [
+            models.Index(fields=['created'])
+        ]
 
+    def __str__(self):
+        return f'Note on {self.treat}'
 
 # class Comment(models.Model):
 #     treat = models.ForeignKey(Treat, on_delete=models.CASCADE)
