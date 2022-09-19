@@ -1,0 +1,20 @@
+{% extends "treats/base.html" %}
+
+{% load bootstrap5 %}
+
+{% block title %}{% if treat %}Edit{% else %}New{% endif %} Treat{% endblock %}
+
+{% block content %}
+
+    <form action="{% url "treats:treat_new" %}" method="post" class="form">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button type="submit" class="btn btn-primary">
+                Submit
+            </button>
+        {% endbuttons %}
+    </form>
+
+
+{% endblock %}
