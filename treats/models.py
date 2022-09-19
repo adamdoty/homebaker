@@ -5,8 +5,8 @@ from django.utils import timezone
 
 class Treat(models.Model):
     name = models.CharField(max_length=250)
-    recipe_link = models.URLField(default="no recipe has been linked yet")
-    picture_link = models.URLField(default="no pciture has been linked yet")
+    recipe_link = models.URLField()
+    picture_link = models.URLField()
 
     def __str__(self):
         return self.name
@@ -18,6 +18,9 @@ class Note(models.Model):
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.body[:50]
 
 
 # class Comment(models.Model):
