@@ -16,11 +16,14 @@ def treat_detail(request, pk):
 
 
 def treat_new(request):
-    form = TreatForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        messages.success(request, 'Added treat')
-        return redirect('treats:treat_list')
+    if request.method == 'POST':
+        form = TreatForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Added treat')
+            return redirect('treats:treat_list')
+    else:
+        form = TreatForm()
     return render(request, 'treats/form.html', context={"form": form})
 
 
