@@ -17,7 +17,7 @@ def treat_detail(request, pk):
 
 def treat_new(request):
     if request.method == 'POST':
-        form = TreatForm(request.POST)
+        form = TreatForm(data=request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, 'Added treat')
@@ -29,13 +29,17 @@ def treat_new(request):
 
 def treat_edit(request, pk):
     treat = get_object_or_404(Treat, pk)
-    form = TreatForm(request.POST or None, instance=treat)
-    if form.is_valid():
-        form.save()
-        messages.success(request, 'Updated treat')
-        return redirect('treats:treat_list')
+    if request.method == 'POST':
+        form = TreatForm(instance=treat, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Updated treat')
+            return redirect('treats:treat_list')
+    else:
+        form = TreatForm(instance=treat)
+
     return render(request, 'treats/form.html', context={"treat": treat,
-                                                              "form": form})
+                                                        "form": form})
 
 
 def treat_delete(request, pk):

@@ -5,20 +5,28 @@ from django.utils import timezone
 
 class Treat(models.Model):
     name = models.CharField(max_length=250)
-    recipe_link = models.URLField(default="no recipe has been linked yet")
-    picture_link = models.URLField(default="no pciture has been linked yet")
+    recipe_link = models.URLField()
+    picture_link = models.URLField()
 
     def __str__(self):
         return self.name
 
 
 class Note(models.Model):
-    treat = models.ForeignKey(Treat, on_delete=models.CASCADE)
+    treat = models.ForeignKey(Treat, on_delete=models.CASCADE, related_name='notes')
     body = models.TextField()
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['created']
+        indexes = [
+            models.Index(fields=['created'])
+        ]
+
+    def __str__(self):
+        return f'Note on {self.treat}'
 
 # class Comment(models.Model):
 #     treat = models.ForeignKey(Treat, on_delete=models.CASCADE)
