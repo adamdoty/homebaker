@@ -6,5 +6,5 @@ from .models import Treat
 class TreatForm(forms.ModelForm):
     class Meta:
         model = Treat
-        fields = ['name', 'recipe_link', 'picture_link']
-        labels = {'name': 'treat', 'recipe_link': '', 'picture_link': ''}
+        fields = ['title', 'description', 'cover_img', 'rating']
+        labels = {'title': 'title', 'description': 'description', 'cover_img': 'cover_img', 'rating': 'rating'}
