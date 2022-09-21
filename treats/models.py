@@ -1,7 +1,11 @@
+from PIL import Image
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
+
+import aws
 
 
 class Treat(models.Model):
@@ -10,7 +14,8 @@ class Treat(models.Model):
     description = models.TextField()
     slug = models.SlugField(max_length=50)
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
-    cover_img = models.URLField(blank=True, null=True)
+    # need a way to upload an image, then have a reference key for the new url that goes to aws s3 bucket
+    cover_img = models.ImageField(upload_to=aws.main, default="no image")
     created = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)
     # rating field = in a review, the recipient user gives a rating. this is the overall rating from all review ratings
@@ -31,9 +36,9 @@ class Note(models.Model):
     """Details about a Treat, treat recipe, or other aspect of a treat."""
     treat = models.ForeignKey(Treat, on_delete=models.CASCADE, related_name='notes')
     body = models.TextField()
-    publish = models.DateTimeField(default=timezone.now)
+    # publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    edited = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['created']
