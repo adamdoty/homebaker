@@ -1,19 +1,20 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Treat(models.Model):
     """A baked good the user has made before or plans to make."""
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     slug = models.SlugField(max_length=50)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     cover_img = models.URLField(blank=True, null=True)
-    publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)
     # rating field = in a review, the recipient user gives a rating. this is the overall rating from all review ratings
-    rating = models.TextField(default="⭐⭐⭐⭐⭐")
+    rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
 
     class Meta:
         ordering = ['rating', 'created']
