@@ -1,23 +1,44 @@
+from PIL import Image
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.core.validators import MinValueValidator, MaxValueValidator
+
+import aws
 
 
 class Treat(models.Model):
-    name = models.CharField(max_length=250)
-    recipe_link = models.URLField()
-    picture_link = models.URLField()
+    """A baked good the user has made before or plans to make."""
+    title = models.CharField(max_length=100, unique=True)
+    description = models.TextField()
+    slug = models.SlugField(max_length=50)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    # need a way to upload an image, then have a reference key for the new url that goes to aws s3 bucket
+    cover_img = models.ImageField(upload_to=aws.main, default="no image")
+    created = models.DateTimeField(auto_now_add=True)
+    edited = models.DateTimeField(auto_now=True)
+    # rating field = in a review, the recipient user gives a rating. this is the overall rating from all review ratings
+    rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
+
+    class Meta:
+        ordering = ['rating', 'created']
+        indexes = [
+            models.Index(fields=['rating']),
+            models.Index(fields=['created'])
+        ]
 
     def __str__(self):
-        return self.name
+        return self.title
 
 
 class Note(models.Model):
+    """Details about a Treat, treat recipe, or other aspect of a treat."""
     treat = models.ForeignKey(Treat, on_delete=models.CASCADE, related_name='notes')
     body = models.TextField()
-    publish = models.DateTimeField(default=timezone.now)
+    # publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    edited = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['created']
