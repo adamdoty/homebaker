@@ -1,8 +1,10 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 
 from .models import Treat
 from .forms import TreatForm
+from .aws import upload_to_s3
 
 
 def treat_list(request):
@@ -15,11 +17,19 @@ def treat_detail(request, pk):
     return render(request, 'treats/detail.html', context={'treat': treat})
 
 
+@login_required
 def treat_new(request):
     if request.method == 'POST':
         form = TreatForm(data=request.POST)
+
         if form.is_valid():
-            form.save()
+            file = request.FILES["img_upload"]
+            cover_img_url = upload_to_s3(file)
+
+            treat = form.save(commit=False)
+            treat.user = request.user
+            treat.cover_img = cover_img_url
+            treat.save()
             messages.success(request, 'Added treat')
             return redirect('treats:treat_list')
     else:
@@ -27,6 +37,7 @@ def treat_new(request):
     return render(request, 'treats/form.html', context={"form": form})
 
 
+@login_required
 def treat_edit(request, pk):
     treat = get_object_or_404(Treat, pk)
     if request.method == 'POST':
@@ -42,6 +53,7 @@ def treat_edit(request, pk):
                                                         "form": form})
 
 
+@login_required
 def treat_delete(request, pk):
     treat = get_object_or_404(Treat, pk)
     if request.method == "POST":

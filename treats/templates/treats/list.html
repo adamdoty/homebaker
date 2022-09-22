@@ -10,7 +10,8 @@
             {% for treat in treats %}
                 <div class="col">
                     <div class="card">
-                        <img src="{% static "images/red_velvet_cupcake.jpg" %}" class="card-img-top" alt="NO IMAGE">
+                        <img src="{{ treat.cover_img }}" class="card-img-top" alt="Nothing here">
+                        {# previous image source: {% static "images/red_velvet_cupcake.jpg" %}#}
                         <div class="card-body">
                             <h5 class="card-title">{{ treat.title }}</h5>
                             <p class="card-text">{{ treat.description }}</p>
