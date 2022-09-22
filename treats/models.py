@@ -1,9 +1,5 @@
-from PIL import Image
-
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils import timezone
-from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Treat(models.Model):
@@ -20,11 +16,9 @@ class Treat(models.Model):
     description = models.TextField()
     slug = models.SlugField(max_length=50)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    # need a way to upload an image, then have a reference key for the new url that goes to aws s3 bucket
     cover_img = models.URLField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)
-    # rating field = in a review, the recipient user gives a rating. this is the overall rating from all review ratings
     rating = models.CharField(max_length=1, choices=Ratings.choices,
                               default=Ratings.THREE_STARS)
 
