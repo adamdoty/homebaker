@@ -8,6 +8,14 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Treat(models.Model):
     """A baked good the user has made before or plans to make."""
+
+    class Ratings(models.TextChoices):
+        ONE_STAR = 1, '⭐'
+        TWO_STARS = 2, '⭐⭐'
+        THREE_STARS = 3, '⭐⭐⭐'
+        FOUR_STARS = 4, '⭐⭐⭐⭐'
+        FIVE_STARS = 5, '⭐⭐⭐⭐⭐'
+
     title = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     slug = models.SlugField(max_length=50)
@@ -17,7 +25,8 @@ class Treat(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)
     # rating field = in a review, the recipient user gives a rating. this is the overall rating from all review ratings
-    rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
+    rating = models.CharField(max_length=1, choices=Ratings.choices,
+                              default=Ratings.THREE_STARS)
 
     class Meta:
         ordering = ['rating', 'created']
