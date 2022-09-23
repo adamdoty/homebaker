@@ -26,13 +26,12 @@ class Treat(models.Model):
     class Meta:
         ordering = ['rating', 'created']
         indexes = [
-            models.Index(fields=['rating']),
+            models.Index(fields=['-rating']),
             models.Index(fields=['created'])
         ]
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)
+        self.slug = slugify(self.title)
         super(Treat, self).save(*args, **kwargs)
 
     def __str__(self):

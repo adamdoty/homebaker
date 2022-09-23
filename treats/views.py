@@ -39,7 +39,7 @@ def treat_new(request):
 
 @login_required
 def treat_edit(request, pk):
-    treat = get_object_or_404(Treat, pk)
+    treat = get_object_or_404(Treat, pk=pk)
     if request.method == 'POST':
         form = TreatForm(instance=treat, data=request.POST)
         if form.is_valid():
@@ -55,7 +55,7 @@ def treat_edit(request, pk):
 
 @login_required
 def treat_delete(request, pk):
-    treat = get_object_or_404(Treat, pk)
+    treat = get_object_or_404(Treat, pk=pk)
     if request.method == "POST":
         treat.delete()
         messages.success(request, 'Deleted treat')

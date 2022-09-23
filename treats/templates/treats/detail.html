@@ -2,33 +2,17 @@
 
 {% load bootstrap5 %}
 
-{% block title %}{{ treat.name }}{% endblock %}
-
 {% block content %}
+
+    {% block title %}{{ treat.name }}{% endblock %}
 
     <div>
         <h1>{{ treat.name }}</h1>
-        <img src="{{ treat.picture_link }}" alt="no picture for this treat yet">
-        <link href="{{ treat.recipe_link }}">
+        <img src="{{ treat.cover_img }}" alt="no picture for this treat yet">
+        <p>{{ treat.description }}</p>
+        <p>{% for i in ""|ljust:treat.rating %}⭐{% endfor %}</p>
+        <a href="{% url "treats:treat_edit" treat.id %}">Edit</a><br>
+        <a href="{% url "treats:treat_delete" treat.id %}">Delete</a>
     </div>
-
-    {#    <div>#}
-    {#        My Notes:#}
-    {#        {% for note in notes %}#}
-    {#        {% endfor %}#}
-    {#    </div>#}
-    {##}
-    {#    <div>#}
-    {#        Comments:#}
-    {#        {% for comment in comments %}#}
-    {#        {% endfor %}#}
-    {#    </div>#}
-    {##}
-    {#    <div>#}
-    {#        Rating: {{ treat.review_rating }}#}
-    {#        Reviews:#}
-    {#        {% for review in reviews %}#}
-    {#        {% endfor %}#}
-    {#    </div>#}
 
 {% endblock %}
