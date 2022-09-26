@@ -13,7 +13,7 @@
                         <img src="{{ treat.cover_img }}" class="card-img-top" alt="Nothing here">
                         {# previous image source: {% static "images/red_velvet_cupcake.jpg" %}#}
                         <div class="card-body">
-                            <h5 class="card-title">{{ treat.title }}</h5>
+                            <h5 class="card-title"><a href="{% url "treats:treat_detail" treat.id %}">{{ treat.title }}</a></h5>
                             <p class="card-text">{{ treat.description }}</p>
                             <p class="card-text">{% for i in ""|ljust:treat.rating %}⭐{% endfor %}</p>
                         </div>

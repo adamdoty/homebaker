@@ -1,5 +1,6 @@
 {% extends "treats/bootstrap.html" %}
 {% load bootstrap5 %}
+{% load bootstrap_icons %}
 {% load static %}
 
 {# Load CSS and JavaScript #}
@@ -7,24 +8,105 @@
 {% bootstrap_javascript %}
 
 {% block bootstrap5_content %}
-    <div class="container">
-        <h1>{% block title %}(no title){% endblock %}</h1>
 
-{#        <p>#}
-{#            <a href="{% url 'home' %}">home</a>#}
-{#            <a href="{% url 'formset_default' %}">formset</a>#}
-{#            <a href="{% url 'form_default' %}">form</a>#}
-{#            <a href="{% url 'form_by_field' %}">form_by_field</a>#}
-{#            <a href="{% url 'form_horizontal' %}">form_horizontal</a>#}
-{#            <a href="{% url 'form_inline' %}">form_inline</a>#}
-{#            <a href="{% url 'form_with_files' %}">form_with_files</a>#}
-{#            <a href="{% url 'pagination' %}">pagination</a>#}
-{#            <a href="{% url 'misc' %}">miscellaneous</a>#}
-{#        </p>#}
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-light">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-black min-vh-100">
+                    <a href="/"
+                       class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-black text-decoration-none">
+                        <span class="fs-5 d-none d-sm-inline">Menu</span>
+                    </a>
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
+                        id="menu">
+                        <li class="nav-item">
+                            <a href="{% url "treats:treat_list" %}" class="nav-link align-middle px-0">
+                                <i class="fs-4 bi-house">{% bs_icon "house" %}</i> <span
+                                    class="ms-1 d-none d-sm-inline">Home</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-speedometer2">{% bs_icon "speedometer2" %}</i> <span
+                                    class="ms-1 d-none d-sm-inline">Dashboard</span> </a>
+                            <ul class="collapse nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                                <li class="w-100">
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 1
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 2
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-table">{% bs_icon "table" %}</i> <span
+                                    class="ms-1 d-none d-sm-inline">Orders</span></a>
+                        </li>
+                        <li>
+                            <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-grid">{% bs_icon "grid" %}</i> <span class="ms-1 d-none d-sm-inline">Products</span>
+                            </a>
+                            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
+                                <li class="w-100">
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 1</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 2</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 3</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 4</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-people">{% bs_icon "people" %}</i> <span
+                                    class="ms-1 d-none d-sm-inline">Customers</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <hr>
+                    {% if user.is_authenticated %}
+                        <div class="dropdown pb-4">
+                            <a href="#"
+                               class="d-flex align-items-center text-black text-decoration-none dropdown-toggle"
+                               id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                                {# user profile pics don't exist yet, need to override and customize user class #}
+                                <img src="{{ user.profile_pic }}" alt="" width="30" height="30"
+                                     class="rounded-circle">
+                                <span class="d-none d-sm-inline mx-1">{{ user.username }}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-light text-small shadow">
+                                <li><a class="dropdown-item" href="{% url "treats:treat_new" %}">New Treat</a></li>
+                                <li><a class="dropdown-item" href="#">Settings</a></li>
+                                <li><a class="dropdown-item" href="#">Profile</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="d-none d-sm-inline mx-1" href="{% url "logout" %}">Log Out</a></li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a class="dropdown-item" href="{% url "login" %}">Log In</a></li>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col py-3">
+                <div class="container">
+                    <h1>{% block title %}(no title){% endblock %}</h1>
 
-        {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+                    {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
 
-        {% block content %}(no content){% endblock %}
+                    {% block content %}(no content){% endblock %}
+                </div>
+            </div>
+        </div>
     </div>
 
 {% endblock %}

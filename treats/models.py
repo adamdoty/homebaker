@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.text import slugify
 
 
 class Treat(models.Model):
@@ -14,7 +15,7 @@ class Treat(models.Model):
 
     title = models.CharField(max_length=100, unique=True)
     description = models.TextField()
-    slug = models.SlugField(max_length=50)
+    slug = models.SlugField(unique=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     cover_img = models.URLField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -25,9 +26,13 @@ class Treat(models.Model):
     class Meta:
         ordering = ['rating', 'created']
         indexes = [
-            models.Index(fields=['rating']),
+            models.Index(fields=['-rating']),
             models.Index(fields=['created'])
         ]
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super(Treat, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.title
