@@ -42,7 +42,6 @@ class Note(models.Model):
     """Details about a Treat, treat recipe, or other aspect of a treat."""
     treat = models.ForeignKey(Treat, on_delete=models.CASCADE, related_name='notes')
     body = models.TextField()
-    # publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)
 
@@ -53,7 +52,7 @@ class Note(models.Model):
         ]
 
     def __str__(self):
-        return f'Note on {self.treat}'
+        return f'Note on {self.treat}: {self.body[:20]}...'
 
 # class Comment(models.Model):
 #     treat = models.ForeignKey(Treat, on_delete=models.CASCADE)

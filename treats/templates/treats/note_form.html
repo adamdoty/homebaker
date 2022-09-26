@@ -1,0 +1,9 @@
+<h2>add a new note</h2>
+
+<form>
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+        <button type="submit" value="Add note"></button>
+    {% endbuttons %}
+</form>

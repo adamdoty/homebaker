@@ -8,11 +8,27 @@
 
     <div>
         <h1>{{ treat.name }}</h1>
-        <img src="{{ treat.cover_img }}" alt="no picture for this treat yet">
+        <img class="treat-img" src="{{ treat.cover_img }}" alt="no picture for this treat yet">
         <p>{{ treat.description }}</p>
         <p>{% for i in ""|ljust:treat.rating %}⭐{% endfor %}</p>
-        <a href="{% url "treats:treat_edit" treat.id %}">Edit</a><br>
-        <a href="{% url "treats:treat_delete" treat.id %}">Delete</a>
+
+        <ul>
+            {% for note in notes %}
+                <div class="note">
+                    <p>{{ note.created }}</p>
+                    {{ note.body|linebreaks }}
+                    <a href="{% url "treats:treat_note" treat.id %}">Edit Note</a><br>
+                    <a href="{% url "treats:treat_note_delete" treat.id %}">Delete Note</a><br>
+                </div>
+            {% empty %}
+                <p>There are no notes yet.</p>
+            {% endfor %}
+        </ul>
+
+        <a href="{% url "treats:treat_note" %}">Add Note</a><br>
+        <a href="{% url "treats:treat_edit" treat.id %}">Edit Treat</a><br>
+        <a href="{% url "treats:treat_delete" treat.id %}">Delete Treat</a>
+
     </div>
 
 {% endblock %}

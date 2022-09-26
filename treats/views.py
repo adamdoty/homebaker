@@ -1,9 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.http import require_POST
 
-from .models import Treat
-from .forms import TreatForm
+from .models import Treat, Note
+from .forms import TreatForm, NoteForm
 from .aws import upload_to_s3
 
 
@@ -14,7 +15,9 @@ def treat_list(request):
 
 def treat_detail(request, pk):
     treat = get_object_or_404(Treat, pk=pk)
-    return render(request, 'treats/detail.html', context={'treat': treat})
+    notes = treat.notes.filter(treat_id=treat.id)
+    form = NoteForm()
+    return render(request, 'treats/detail.html', context={'treat': treat, 'notes': notes, 'form': form})
 
 
 @login_required
@@ -61,3 +64,25 @@ def treat_delete(request, pk):
         messages.success(request, 'Deleted treat')
         return redirect('treats:treat_list')
     return render(request, 'treats/delete.html', context={"treat": treat})
+
+
+# @require_POST
+def treat_note(request, pk):
+    treat = get_object_or_404(Treat, id=pk)
+    note = None
+    form = NoteForm(data=request.POST)
+    if form.is_valid():
+        note = form.save(commit=False)
+        note.treat = treat
+        note.save()
+    return render(request, 'treats/note_form.html', context={'treat': 'treat', 'form': 'form', 'note': 'note'})
+
+
+def treat_note_delete(request, treat_pk, note_pk):
+    treat = get_object_or_404(Treat, id=treat_pk)
+    note = get_object_or_404(Note, id=note_pk)
+    if request.method == "POST":
+        note.delete()
+        messages.success(request, 'Deleted note')
+        return redirect('treats:treat_detail')
+    return render(request, 'treats/delete.html', context={"treat": treat, "note": note})
