@@ -1,7 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.decorators.http import require_POST
 
 from .models import Treat, Note
 from .forms import TreatForm, NoteForm
@@ -42,7 +41,7 @@ def treat_new(request):
 
 @login_required
 def treat_edit(request, pk):
-    treat = get_object_or_404(Treat, pk=pk)
+    treat = get_object_or_404(Treat, pk=pk, user=request.user)
     if request.method == 'POST':
         form = TreatForm(instance=treat, data=request.POST)
         if form.is_valid():
@@ -58,7 +57,7 @@ def treat_edit(request, pk):
 
 @login_required
 def treat_delete(request, pk):
-    treat = get_object_or_404(Treat, pk=pk)
+    treat = get_object_or_404(Treat, pk=pk, user=request.user)
     if request.method == "POST":
         treat.delete()
         messages.success(request, 'Deleted treat')
@@ -66,16 +65,22 @@ def treat_delete(request, pk):
     return render(request, 'treats/delete.html', context={"treat": treat})
 
 
-# @require_POST
 def treat_note(request, pk):
     treat = get_object_or_404(Treat, id=pk)
     note = None
-    form = NoteForm(data=request.POST)
-    if form.is_valid():
-        note = form.save(commit=False)
-        note.treat = treat
-        note.save()
-    return render(request, 'treats/note_form.html', context={'treat': 'treat', 'form': 'form', 'note': 'note'})
+    if request.method == 'POST':
+        form = NoteForm(data=request.POST)
+
+        if form.is_valid():
+            note = form.save(commit=False)
+            note.treat = treat
+            note.save()
+            messages.success(request, 'Added note')
+            # issue with redirecting here
+            return redirect('treats:treat_detail', treat_id=treat.id)
+    else:
+        form = NoteForm()
+    return render(request, 'treats/note.html', context={'treat': treat, 'form': form, 'note': note})
 
 
 def treat_note_delete(request, treat_pk, note_pk):

@@ -2,10 +2,18 @@
 
 {% load bootstrap5 %}
 
+{% block title %}Add a new Note{% endblock %}
+
 {% block content %}
 
-    {% block title %}Note{% endblock %}
-
-    {% include "treats/note_form.html" %}
+    <form action="{% url "treats:treat_note" treat.id %}" method="post" class="form">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button type="submit" class="btn btn-primary">
+                Submit
+            </button>
+        {% endbuttons %}
+    </form>
 
 {% endblock %}
