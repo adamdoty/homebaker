@@ -9,11 +9,11 @@ class TreatForm(forms.ModelForm):
     class Meta:
         model = Treat
         fields = ['title', 'description', 'img_upload', 'rating']
-        labels = {'title': 'title', 'description': 'description', 'cover_img': 'cover_img', 'rating': 'rating'}
+        labels = {'title': 'Title', 'description': 'Description', 'cover_img': 'Cover_img', 'rating': 'Rating'}
 
 
 class NoteForm(forms.ModelForm):
     class Meta:
         model = Note
         fields = ['body']
-        labels = {'body': 'body'}
+        labels = {'body': 'Add a note'}

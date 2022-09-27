@@ -15,8 +15,7 @@ def treat_list(request):
 def treat_detail(request, pk):
     treat = get_object_or_404(Treat, pk=pk)
     notes = treat.notes.filter(treat_id=treat.id)
-    form = NoteForm()
-    return render(request, 'treats/detail.html', context={'treat': treat, 'notes': notes, 'form': form})
+    return render(request, 'treats/detail.html', context={'treat': treat, 'notes': notes})
 
 
 @login_required
@@ -65,6 +64,7 @@ def treat_delete(request, pk):
     return render(request, 'treats/delete.html', context={"treat": treat})
 
 
+@login_required
 def treat_note(request, pk):
     treat = get_object_or_404(Treat, id=pk)
     note = None
@@ -83,6 +83,7 @@ def treat_note(request, pk):
     return render(request, 'treats/note.html', context={'treat': treat, 'form': form, 'note': note})
 
 
+@login_required
 def treat_note_delete(request, treat_pk, note_pk):
     treat = get_object_or_404(Treat, id=treat_pk)
     note = get_object_or_404(Note, id=note_pk)
