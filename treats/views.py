@@ -84,9 +84,9 @@ def treat_note(request, pk):
     return render(request, 'treats/note.html', context={'treat': treat, 'form': form, 'note': note})
 
 
-def treat_note_delete(request, treat_pk, note_pk):
-    treat = get_object_or_404(Treat, id=treat_pk)
-    note = get_object_or_404(Note, id=note_pk)
+def treat_note_delete(request, pk):
+    note = get_object_or_404(Note, id=pk)
+    treat = note.treat
     if request.method == "POST":
         note.delete()
         messages.success(request, 'Deleted note')
