@@ -2,11 +2,11 @@
 
 {% load bootstrap5 %}
 
-{% block title %}{% if treat %}Edit{% else %}New{% endif %} Treat{% endblock %}
+{% block title %}Add a new Note{% endblock %}
 
 {% block content %}
 
-    <form action="{% url "treats:treat_new" %}" method="post" class="form" enctype="multipart/form-data">
+    <form action="{% url "treats:treat_note" treat.id %}" method="post" class="form">
         {% csrf_token %}
         {% bootstrap_form form %}
         {% buttons %}

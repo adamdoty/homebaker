@@ -2,3 +2,8 @@
     width: 150px;
     height: 150px;
 }
+
+.treat-img {
+    max-width: 0.5rem;
+    max-height: 0.5rem;
+}
