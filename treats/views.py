@@ -78,8 +78,7 @@ def treat_note(request, pk):
             note.treat = treat
             note.save()
             messages.success(request, 'Added note')
-            # issue with redirecting here
-            return redirect('treats:treat_detail', treat_id=treat.id)
+            return redirect('treats:treat_detail', pk=treat.id)
     else:
         form = NoteForm()
     return render(request, 'treats/note.html', context={'treat': treat, 'form': form, 'note': note})
