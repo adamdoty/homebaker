@@ -90,5 +90,6 @@ def treat_note_delete(request, pk):
     if request.method == "POST":
         note.delete()
         messages.success(request, 'Deleted note')
-        return redirect('treats:treat_detail')
+        return redirect('treats:treat_detail', pk=treat.id)
+
     return render(request, 'treats/delete.html', context={"treat": treat, "note": note})
