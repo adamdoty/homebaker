@@ -25,12 +25,14 @@ def treat_new(request):
         form = TreatForm(data=request.POST)
 
         if form.is_valid():
-            file = request.FILES["img_upload"]
-            cover_img_url = upload_to_s3(file)
-
             treat = form.save(commit=False)
             treat.user = request.user
-            treat.cover_img = cover_img_url
+
+            file = request.FILES.get("img_upload")
+            if file is not None:
+                cover_img_url = upload_to_s3(file)
+                treat.cover_img = cover_img_url
+
             treat.save()
             messages.success(request, 'Added treat')
             return redirect('treats:treat_list')
