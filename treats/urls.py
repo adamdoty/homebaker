@@ -10,5 +10,6 @@ urlpatterns = [
     path('edit/<int:pk>', views.treat_edit, name='treat_edit'),
     path('delete/<int:pk>', views.treat_delete, name='treat_delete'),
     path('<int:pk>/note', views.treat_note, name='treat_note'),
+    path('edit/<int:pk>/note', views.treat_note_edit, name='treat_note_edit'),
     path('delete/<int:pk>/note', views.treat_note_delete, name='treat_note_delete'),
 ]

@@ -16,4 +16,4 @@ class NoteForm(forms.ModelForm):
     class Meta:
         model = Note
         fields = ['body']
-        labels = {'body': 'Add a note'}
+        labels = {'body': 'Note content'}

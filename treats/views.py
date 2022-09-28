@@ -24,12 +24,14 @@ def treat_new(request):
         form = TreatForm(data=request.POST)
 
         if form.is_valid():
-            file = request.FILES["img_upload"]
-            cover_img_url = upload_to_s3(file)
-
             treat = form.save(commit=False)
             treat.user = request.user
-            treat.cover_img = cover_img_url
+
+            file = request.FILES.get("img_upload")
+            if file is not None:
+                cover_img_url = upload_to_s3(file)
+                treat.cover_img = cover_img_url
+
             treat.save()
             messages.success(request, 'Added treat')
             return redirect('treats:treat_list')
@@ -76,19 +78,35 @@ def treat_note(request, pk):
             note.treat = treat
             note.save()
             messages.success(request, 'Added note')
-            # issue with redirecting here
-            return redirect('treats:treat_detail', treat_id=treat.id)
+            return redirect('treats:treat_detail', pk=treat.id)
     else:
         form = NoteForm()
     return render(request, 'treats/note.html', context={'treat': treat, 'form': form, 'note': note})
 
 
 @login_required
-def treat_note_delete(request, treat_pk, note_pk):
-    treat = get_object_or_404(Treat, id=treat_pk)
-    note = get_object_or_404(Note, id=note_pk)
+def treat_note_edit(request, pk):
+    note = get_object_or_404(Note, pk=pk)
+    treat = note.treat
+    if request.method == 'POST':
+        form = NoteForm(instance=note, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Updated note')
+            return redirect('treats:treat_detail', pk=treat.id)
+    else:
+        form = NoteForm(instance=note)
+
+    return render(request, 'treats/note.html', context={"treat": treat, "note": note, "form": form})
+
+
+@login_required
+def treat_note_delete(request, pk):
+    note = get_object_or_404(Note, id=pk)
+    treat = note.treat
     if request.method == "POST":
         note.delete()
         messages.success(request, 'Deleted note')
-        return redirect('treats:treat_detail')
+        return redirect('treats:treat_detail', pk=treat.id)
+
     return render(request, 'treats/delete.html', context={"treat": treat, "note": note})
