@@ -1,16 +1,16 @@
 {% extends "treats/base.html" %}
 
-{% block title %}{% endblock %}
+{% load bootstrap5 %}
+
+{% block title %}Confirm Delete{% endblock %}
 
 {% block content %}
-
-    <h1>Confirm Delete Post</h1>
 
     <form method="post">
         {% csrf_token %}
         <h2>{{ treat.name }}</h2>
-        <p>Are you sure you want to delete this treat?</p>
-        <input type="submit" value="Delete"/>
+        <p>Are you sure you want to delete this?</p>
+        <input type="submit" value="Delete"/><br>
         <a href="{% url "treats:treat_list" %}">Go Back</a>
     </form>
 

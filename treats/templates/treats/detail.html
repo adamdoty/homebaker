@@ -16,6 +16,7 @@
                 <div class="note">
                     <p>{{ note.created }}</p>
                     {{ note.body|linebreaks }}
+                    <a href="{% url "treats:treat_note_edit" note.id %}">Edit Note</a><br>
                     <a href="{% url "treats:treat_note_delete" note.id %}">Delete Note</a><br>
                 </div>
             {% empty %}

@@ -85,6 +85,22 @@ def treat_note(request, pk):
 
 
 @login_required
+def treat_note_edit(request, pk):
+    note = get_object_or_404(Note, pk=pk)
+    treat = note.treat
+    if request.method == 'POST':
+        form = NoteForm(instance=note, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Updated note')
+            return redirect('treats:treat_detail', pk=treat.id)
+    else:
+        form = NoteForm(instance=note)
+
+    return render(request, 'treats/note.html', context={"treat": treat, "note": note, "form": form})
+
+
+@login_required
 def treat_note_delete(request, pk):
     note = get_object_or_404(Note, id=pk)
     treat = note.treat
