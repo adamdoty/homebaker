@@ -103,8 +103,11 @@ class Coupon(models.Model):
         ]
 
     def __str__(self):
-        return f'For {self.reason_for_coupon.lower()} on {self.reason_for_coupon_date.strftime("%m/%d/%y")}' \
-               f' | Expires on {self.expiration_date.strftime("%m/%d/%y")}.'
+        return (
+            f'For {self.reason.lower()} on '
+            f'{self.target_date.strftime("%m/%d/%y")} | Expires'
+            f' on {self.expiration_date.strftime("%m/%d/%y")}.'
+        )
 
 # class Comment(models.Model):
 #     treat = models.ForeignKey(Treat, on_delete=models.CASCADE)

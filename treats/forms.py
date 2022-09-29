@@ -23,6 +23,5 @@ class NoteForm(forms.ModelForm):
 class CouponForm(forms.ModelForm):
     class Meta:
         model = Coupon
-        fields = ['reason_for_coupon', 'coupon_recipient', 'treat', 'reason_for_coupon_date', 'expiration_date']
-        labels = {'reason_for_coupon': 'Reason for Coupon', 'coupon_recipient': 'Coupon Recipient', 'treat': 'Treat',
-                  'reason_for_coupon_date': 'Date of Event/Coupon Reason', 'expiration_date': 'Expiration Date'}
+        fields = ['reason', 'recipient', 'treat', 'target_date', 'expiration_date']
+        labels = {'reason': 'Reason for Coupon', 'recipient': 'Coupon Recipient', 'treat': 'Treat', 'target_date': 'Date of Event/Coupon Reason', 'expiration_date': 'Expiration Date'}
