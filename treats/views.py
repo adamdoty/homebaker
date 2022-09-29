@@ -2,8 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 
-from .models import Treat, Note
-from .forms import TreatForm, NoteForm
+from .models import Treat, Note, Coupon
+from .forms import TreatForm, NoteForm, CouponForm
 from .aws import upload_to_s3
 
 
@@ -15,7 +15,7 @@ def treat_list(request):
 def treat_detail(request, pk):
     treat = get_object_or_404(Treat, pk=pk)
     notes = treat.notes.filter(treat_id=treat.id)
-    return render(request, 'treats/detail.html', context={'treat': treat, 'notes': notes})
+    return render(request, 'treats/treat-detail.html', context={'treat': treat, 'notes': notes})
 
 
 @login_required
@@ -110,3 +110,54 @@ def treat_note_delete(request, pk):
         return redirect('treats:treat_detail', pk=treat.id)
 
     return render(request, 'treats/delete.html', context={"treat": treat, "note": note})
+
+
+@login_required
+def coupon_tracker(request):
+    coupons = Coupon.objects.all()
+    return render(request, 'coupons/tracker.html', context={'coupons': coupons})
+
+
+@login_required
+def coupon_detail(request, pk):
+    coupon = get_object_or_404(Coupon, pk=pk)
+    return render(request, 'coupons/coupon-detail.html', context={'coupon': coupon})
+
+
+@login_required
+def coupon_new(request):
+    if request.method == 'POST':
+        form = CouponForm(data=request.POST)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Added coupon')
+            return redirect('treats:coupon_tracker')
+    else:
+        form = CouponForm()
+    return render(request, 'coupons/coupon-detail.html', context={'form': form})
+
+
+@login_required
+def coupon_edit(request, pk):
+    coupon = get_object_or_404(Coupon, pk=pk)
+    if request.method == 'POST':
+        form = CouponForm(data=request.POST)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Coupon updated')
+            return redirect('treats:coupon_detail')
+    else:
+        form = CouponForm(instance=coupon)
+    return render(request, 'coupons/coupon-detail.html', {'coupon': coupon, 'form': form})
+
+
+@login_required
+def coupon_delete(request, pk):
+    coupon = get_object_or_404(Coupon, pk=pk)
+    if request.method == 'POST':
+        coupon.delete()
+        messages.success(request, 'Coupon deleted')
+        return redirect('treats:coupon_tracker')
+    return render(request, 'treats/delete.html', context={'coupon': coupon})

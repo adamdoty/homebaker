@@ -1,0 +1,17 @@
+{% extends "treats/base.html" %}
+
+{% load bootstrap5 %}
+
+{% block title %}For {{ coupon.recipient }}'s {{ coupon.reason_for_coupon }}{% endblock %}
+
+{% block content %}
+
+    <p>{{ coupon.status }}</p>
+
+    <p>{{ coupon.treat }}</p>
+    <a href="{% url "treats:treat_detail" coupon.treat.id %}">Treat Detail</a>
+
+    <a href="{% url "treats:coupon_edit" coupon.id %}">Edit Coupon</a><br>
+    <a href="{% url "treats:coupon_delete" coupon.id %}">Delete Coupon</a>
+
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "treats/base.html" %}
+{% load static %}
+
+{% block title %}Coupon Tracker{% endblock %}
+
+{% block content %}
+    <hr>
+    {% if coupons %}
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for coupon in coupons %}
+                <p>
+                    {{ coupon.status }} |
+                    {{ coupon.coupon_recipient }} -
+                    <a href="{% url "treats:treat_detail" coupon.treat.id %}">{{ coupon.treat }}</a> -
+                    {{ coupon.treat.recipe_source }} |
+                    {{ coupon.target_date }}
+                </p>
+            {% endfor %}
+        </div>
+    {% else %}
+        You have no coupons.<a href="{% url 'coupons:coupon-detail' %}">New Coupon</a>
+    {% endif %}
+
+{% endblock %}

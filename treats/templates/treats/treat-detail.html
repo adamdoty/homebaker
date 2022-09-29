@@ -10,6 +10,9 @@
         <img class="w-25 h-25" src="{{ treat.cover_img }}" alt="no picture for this treat yet">
         <p>{{ treat.description }}</p>
         <p>{% for i in ""|ljust:treat.rating %}⭐{% endfor %}</p>
+        <p>********** Review Placeholder **********</p>
+        <p>{{ treat.recipe_source|urlize }}</p>
+
 
         <ul>
             {% for note in notes %}
