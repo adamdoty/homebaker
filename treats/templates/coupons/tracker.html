@@ -6,20 +6,35 @@
 {% block content %}
     <hr>
     {% if coupons %}
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            {% for coupon in coupons %}
-                <p>
-                    {{ coupon.reason }} |
-                    {{ coupon.recipient }} |
-                    {{ coupon.treat }} |
-                    {{ coupon.target_date }}
-                    {{ coupon.expiration_date }}
-                    {{ coupon.status }} |
-                </p>
-            {% endfor %}
+        <div class="container">
+            <ul class="list-group">
+                {% for coupon in coupons %}
+                    <div class="row">
+                        <li class="list-group-item">
+                            {{ coupon.reason|title }} |
+
+                            {% if coupon.recipient %}{{ coupon.recipient }}
+                            {% else %}<a href="{% url "treats:coupon_edit" coupon.id %}">Assign Recipient</a>
+                            {% endif %} |
+
+                            {% if coupon.treat %}{{ coupon.treat }}
+                            {% else %}<a href="{% url "treats:coupon_edit" coupon.id %}">Assign Treat</a>
+                            {% endif %}|
+
+                            Due Date: {{ coupon.target_date.date }} |
+
+                            Expires: {{ coupon.expiration_date.date }} |
+
+                            Status: {{ coupon.status }}
+                        </li>
+                        <br>
+                    </div>
+                {% endfor %}
+            </ul>
         </div>
     {% else %}
-        You have no coupons.<a href="{% url 'coupons:coupon-detail' %}">New Coupon</a>
+        <p>You have no coupons.</p>
+        <a href="{% url 'treats:coupon_new' %}">New Coupon</a>
     {% endif %}
 
 {% endblock %}

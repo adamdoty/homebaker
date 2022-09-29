@@ -27,48 +27,47 @@
                         </li>
                         <li>
                             <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                                <i class="fs-4 bi-speedometer2">{% bs_icon "speedometer2" %}</i> <span
-                                    class="ms-1 d-none d-sm-inline">Dashboard</span> </a>
+                                <i class="fs-4 bi-cart4">{% bs_icon "cart4" %}</i>
+                                <span class="ms-1 d-none d-sm-inline">Treats</span>
+                            </a>
                             <ul class="collapse nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
                                 <li class="w-100">
-                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 1
+                                    <a href="{% url 'treats:treat_list' %}" class="nav-link px-0">
+                                        <span class="d-none d-sm-inline">
+                                            Catalogue
+                                        </span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 2
+                                    <a href="{% url 'treats:treat_new' %}" class="nav-link px-0">
+                                        <span class="d-none d-sm-inline">
+                                            New Treat
+                                        </span>
                                     </a>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#" class="nav-link px-0 align-middle">
-                                <i class="fs-4 bi-table">{% bs_icon "table" %}</i> <span
-                                    class="ms-1 d-none d-sm-inline">Orders</span></a>
-                        </li>
-                        <li>
-                            <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                                <i class="fs-4 bi-grid">{% bs_icon "grid" %}</i> <span class="ms-1 d-none d-sm-inline">Products</span>
+                            <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-ticket-perforated">{% bs_icon "ticket-perforated" %}</i>
+                                <span class="ms-1 d-none d-sm-inline">Coupons</span>
                             </a>
-                            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
+                            <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
                                 <li class="w-100">
-                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 1</a>
+                                    <a href="{% url 'treats:coupon_tracker' %}" class="nav-link px-0">
+                                        <span class="d-none d-sm-inline">
+                                            Coupon Tracker
+                                        </span>
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 2</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 3</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 4</a>
+                                    <a href="{% url 'treats:coupon_new' %}" class="nav-link px-0">
+                                        <span class="d-none d-sm-inline">
+                                            New Coupon
+                                        </span>
+                                    </a>
                                 </li>
                             </ul>
-                        </li>
-                        <li>
-                            <a href="#" class="nav-link px-0 align-middle">
-                                <i class="fs-4 bi-people">{% bs_icon "people" %}</i> <span
-                                    class="ms-1 d-none d-sm-inline">Customers</span>
-                            </a>
                         </li>
                     </ul>
                     <hr>
@@ -83,7 +82,6 @@
                                 <span class="d-none d-sm-inline mx-1">{{ user.username }}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-light text-small shadow">
-                                <li><a class="dropdown-item" href="{% url "treats:treat_new" %}">New Treat</a></li>
                                 <li><a class="dropdown-item" href="#">Settings</a></li>
                                 <li><a class="dropdown-item" href="#">Profile</a></li>
                                 <li>

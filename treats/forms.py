@@ -24,17 +24,17 @@ class CouponForm(ModelForm):
     class Meta:
         model = Coupon
         fields = ['reason', 'recipient', 'target_date', 'expiration_date']
-        labels = {'reason': 'Reason for Coupon', 'recipient': 'Coupon Recipient', 'target_date': 'Date of Event/Coupon Reason', 'expiration_date': 'Expiration Date'}
+        labels = {'reason': 'Reason for Coupon', 'recipient': 'Coupon Recipient',
+                  'target_date': 'Date of Event/Coupon Reason', 'expiration_date': 'Expiration Date'}
         widgets = {
             'target_date': DateInput(
-                format=('%Y-%m-%d'),
+                format='%Y-%m-%d',
                 attrs={'class': 'form-control',
-                    'placeholder': 'Select a date',
-                    'type': 'date'}),
+                       'placeholder': 'Select a date',
+                       'type': 'date'}),
             'expiration_date': DateInput(
-                format=('%Y-%m-%d'),
+                format='%Y-%m-%d',
                 attrs={'class': 'form-control',
-                    'placeholder': 'Select a date',
-                    'type': 'date'}),
+                       'placeholder': 'Select a date',
+                       'type': 'date'}),
         }
-
