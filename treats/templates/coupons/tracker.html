@@ -9,11 +9,12 @@
         <div class="row row-cols-1 row-cols-md-3 g-4">
             {% for coupon in coupons %}
                 <p>
-                    {{ coupon.status }} |
-                    {{ coupon.coupon_recipient }} -
-                    <a href="{% url "treats:treat_detail" coupon.treat.id %}">{{ coupon.treat }}</a> -
-                    {{ coupon.treat.recipe_source }} |
+                    {{ coupon.reason }} |
+                    {{ coupon.recipient }} |
+                    {{ coupon.treat }} |
                     {{ coupon.target_date }}
+                    {{ coupon.expiration_date }}
+                    {{ coupon.status }} |
                 </p>
             {% endfor %}
         </div>

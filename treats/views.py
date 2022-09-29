@@ -115,6 +115,7 @@ def treat_note_delete(request, pk):
 @login_required
 def coupon_tracker(request):
     coupons = Coupon.objects.all()
+    print(coupons)
     return render(request, 'coupons/tracker.html', context={'coupons': coupons})
 
 
@@ -135,7 +136,7 @@ def coupon_new(request):
             return redirect('treats:coupon_tracker')
     else:
         form = CouponForm()
-    return render(request, 'coupons/coupon-detail.html', context={'form': form})
+    return render(request, 'coupons/coupon-form.html', context={'form': form})
 
 
 @login_required

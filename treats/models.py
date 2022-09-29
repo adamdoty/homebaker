@@ -1,8 +1,9 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 from django.utils.text import slugify
-
-import datetime
 
 
 class Treat(models.Model):
@@ -81,20 +82,28 @@ class Coupon(models.Model):
         EXPIRED = 'Expired'
 
     reason = models.CharField(max_length=50)
-    recipient = models.ForeignKey(User, on_delete=models.CASCADE)
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE,
+                                  null=True, blank=True)
     # maybe a way to have placeholder user would be nice
 
-    treat = models.TextField(blank=True)
+    # gets written when coupon is redeemed
+    treat = models.ForeignKey(Treat, on_delete=models.SET_NULL,
+                              null=True, blank=True)
+
     # if baker is filling out, they can select from catalogue, otherwise leave empty for recipient to fill out
 
     created = models.DateTimeField(auto_now_add=True)
-    target_date = models.DateTimeField(blank=True)
+
     # i.e. the birthday, 1st day of promotion, etc
+    target_date = models.DateTimeField(default=timezone.now)
 
-    expiration_date = models.DateTimeField()
     # for coupons that "never expire" -> +100 years or something similar
-
+    expiration_date = models.DateTimeField()
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.NOT_SENT_YET)
+
+    @property
+    def is_redeemed(self):
+        return self.treat is not None
 
     class Meta:
         ordering = ['created']
@@ -103,8 +112,11 @@ class Coupon(models.Model):
         ]
 
     def __str__(self):
-        return f'For {self.reason_for_coupon.lower()} on {self.reason_for_coupon_date.strftime("%m/%d/%y")}' \
-               f' | Expires on {self.expiration_date.strftime("%m/%d/%y")}.'
+        return (
+            f'For {self.reason.lower()} on '
+            f'{self.target_date.strftime("%m/%d/%y")} | Expires'
+            f' on {self.expiration_date.strftime("%m/%d/%y")}.'
+        )
 
 # class Comment(models.Model):
 #     treat = models.ForeignKey(Treat, on_delete=models.CASCADE)
