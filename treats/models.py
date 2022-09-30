@@ -1,9 +1,11 @@
 import datetime
 
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils import timezone
+from django.dispatch import receiver
 from django.utils.text import slugify
+from django.db.models.signals import post_save
+from django.contrib.auth.models import User
 
 
 class Treat(models.Model):
@@ -117,6 +119,22 @@ class Coupon(models.Model):
             f'{self.target_date.strftime("%m/%d/%y")} | Expires'
             f' on {self.expiration_date.strftime("%m/%d/%y")}.'
         )
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    is_baker_user = models.BooleanField()
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
 
 # class Comment(models.Model):
 #     treat = models.ForeignKey(Treat, on_delete=models.CASCADE)

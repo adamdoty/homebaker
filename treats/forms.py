@@ -1,6 +1,7 @@
-from django.forms import DateInput, ModelForm, FileField
+from django.forms import DateInput, ModelForm, FileField, CharField, PasswordInput
+from django.contrib.auth.models import User
 
-from .models import Treat, Note, Coupon
+from .models import Treat, Note, Coupon, Profile
 
 
 class TreatForm(ModelForm):
@@ -38,3 +39,16 @@ class CouponForm(ModelForm):
                        'placeholder': 'Select a date',
                        'type': 'date'}),
         }
+
+
+class UserForm(ModelForm):
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email')
+
+
+class ProfileForm(ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('is_baker_user',)
