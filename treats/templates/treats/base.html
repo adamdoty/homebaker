@@ -91,7 +91,23 @@
                             </ul>
                         </div>
                     {% else %}
-                        <a class="dropdown-item" href="{% url "login" %}">Log In</a></li>
+                        <div class="dropdown pb-4">
+                            <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
+                                id="menu">
+                                <li class="nav-item">
+                                    <a href="{% url "login" %}" class="nav-link align-middle px-0">
+                                        <i class="fs-4 bi-box-arrow-in-right">{% bs_icon "box-arrow-in-right" %}</i> <span
+                                            class="ms-1 d-none d-sm-inline">Log In</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url "treats:register" %}" class="nav-link align-middle px-0">
+                                        <i class="fs-4 bi-person-plus">{% bs_icon "person-plus" %}</i> <span
+                                            class="ms-1 d-none d-sm-inline">Register</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     {% endif %}
                 </div>
             </div>

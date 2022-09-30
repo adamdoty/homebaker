@@ -1,8 +1,10 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 
-from .models import Treat, Note, Coupon
+from .models import Treat, Note, Coupon, User
 from .forms import TreatForm, NoteForm, CouponForm
 from .aws import upload_to_s3
 
@@ -162,3 +164,27 @@ def coupon_delete(request, pk):
         messages.success(request, 'Coupon deleted')
         return redirect('treats:coupon_tracker')
     return render(request, 'treats/delete.html', context={'coupon': coupon})
+
+
+def register(request):
+    """Register a new user"""
+    if request.method == 'POST':
+        form = UserCreationForm(data=request.POST)
+
+        if form.is_valid():
+            new_user = form.save(commit=False)
+
+            # make the first user of the app the baker user, exclude superuser
+            # NOT WORKING
+            print(User.objects.all().exclude(is_staff=True))
+            if User.objects.all().exclude(is_staff=True) is None:
+                new_user.profile.is_baker_user = True
+
+            new_user.save()
+            login(request, new_user)
+            return redirect('treats:treat_list')
+
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'registration/register.html', context={'form': form})

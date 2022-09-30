@@ -123,7 +123,13 @@ class Coupon(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    is_baker_user = models.BooleanField()
+    is_baker_user = models.BooleanField(default=False)
+
+    def __str__(self):
+        if self.is_baker_user:
+            return f'User {self.user.username}: Baker User'
+        else:
+            return f'User {self.user.username}: NOT a Baker User'
 
 
 @receiver(post_save, sender=User)
