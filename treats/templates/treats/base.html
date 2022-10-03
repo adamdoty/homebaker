@@ -1,4 +1,5 @@
 {% extends "treats/bootstrap.html" %}
+
 {% load bootstrap5 %}
 {% load bootstrap_icons %}
 {% load static %}
@@ -38,13 +39,23 @@
                                         </span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="{% url 'treats:treat_new' %}" class="nav-link px-0">
+                                {% if user.profile.is_baker_user %}
+                                    <li>
+                                        <a href="{% url 'treats:treat_new' %}" class="nav-link px-0">
                                         <span class="d-none d-sm-inline">
                                             New Treat
                                         </span>
-                                    </a>
-                                </li>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <a href="{% url 'treats:treat_request' %}" class="nav-link px-0">
+                                        <span class="d-none d-sm-inline">
+                                            Treat Request
+                                        </span>
+                                        </a>
+                                    </li>
+                                {% endif %}
                             </ul>
                         </li>
                         <li>
@@ -53,20 +64,30 @@
                                 <span class="ms-1 d-none d-sm-inline">Coupons</span>
                             </a>
                             <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
-                                <li class="w-100">
-                                    <a href="{% url 'treats:coupon_tracker' %}" class="nav-link px-0">
+                                {% if user.profile.is_baker_user %}
+                                    <li class="w-100">
+                                        <a href="{% url 'treats:coupon_tracker' %}" class="nav-link px-0">
                                         <span class="d-none d-sm-inline">
                                             Coupon Tracker
                                         </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'treats:coupon_new' %}" class="nav-link px-0">
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'treats:coupon_new' %}" class="nav-link px-0">
                                         <span class="d-none d-sm-inline">
                                             New Coupon
                                         </span>
-                                    </a>
-                                </li>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <a href="{% url 'treats:my_coupons' %}" class="nav-link px-0">
+                                        <span class="d-none d-sm-inline">
+                                            My Coupons
+                                        </span>
+                                        </a>
+                                    </li>
+                                {% endif %}
                             </ul>
                         </li>
                     </ul>
@@ -96,8 +117,9 @@
                                 id="menu">
                                 <li class="nav-item">
                                     <a href="{% url "login" %}" class="nav-link align-middle px-0">
-                                        <i class="fs-4 bi-box-arrow-in-right">{% bs_icon "box-arrow-in-right" %}</i> <span
-                                            class="ms-1 d-none d-sm-inline">Log In</span>
+                                        <i class="fs-4 bi-box-arrow-in-right">{% bs_icon "box-arrow-in-right" %}</i>
+                                        <span
+                                                class="ms-1 d-none d-sm-inline">Log In</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">

@@ -9,7 +9,9 @@ from django.contrib.auth.models import User
 
 
 class Treat(models.Model):
-    """A baked good the user has made before or plans to make."""
+    """
+    A baked good the user has made before.
+    """
 
     class Ratings(models.TextChoices):
         ONE_STAR = 1, '⭐'
@@ -25,9 +27,14 @@ class Treat(models.Model):
     cover_img = models.URLField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)
+
+    # rating should be determined by the cumulative review score
     rating = models.CharField(max_length=1, choices=Ratings.choices,
-                              default=Ratings.THREE_STARS)
-    recipe_source = models.TextField(max_length=250, blank=True)
+                              default=Ratings.THREE_STARS, null=True, blank=True)
+    recipe_source = models.TextField(max_length=250, null=True, blank=True)
+
+    # marking a treat as a request field will allow the baker user to approve requests
+    # is_request = models.BooleanField()
 
     class Meta:
         ordering = ['rating', 'created']
@@ -101,17 +108,33 @@ class Coupon(models.Model):
 
     # for coupons that "never expire" -> +100 years or something similar
     expiration_date = models.DateTimeField()
+
+    # represents the coupon redemption date, triggered when the treat is filled in
+    redemption_date = models.DateTimeField(null=True, blank=True)
+
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.NOT_SENT_YET)
 
     @property
     def is_redeemed(self):
-        return self.treat is not None
+        return self.redemption_date is not None
 
     class Meta:
         ordering = ['created']
         indexes = [
             models.Index(fields=['created'])
         ]
+
+    def save(self, *args, **kwargs):
+        if self.treat is not None and self.redemption_date is None:
+            self.redemption_date = datetime.datetime.now()
+            self.status = self.Status.TO_DO
+
+        if self.recipient and self.treat is None:
+            self.status = self.Status.WAITING_FOR_RESPONSE
+
+        super(Coupon, self).save(*args, **kwargs)
+        # post saving, update the redemption_date field based on whether the treat has been selected
+        # only redeems the coupon the first time a treat is selected
 
     def __str__(self):
         return (

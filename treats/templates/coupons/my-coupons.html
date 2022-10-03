@@ -1,0 +1,35 @@
+{% extends "treats/base.html" %}
+{% load static %}
+
+{% block title %}My Coupons{% endblock %}
+
+{% block content %}
+    <hr>
+    {% if coupons %}
+        <div class="container">
+            <ul class="list-group">
+                {% for coupon in coupons %}
+                    <div class="row">
+                        <li class="list-group-item">
+                            {{ coupon.reason|title }} |
+
+                            Due Date: {{ coupon.target_date.date }} |
+
+                            Expires: {{ coupon.expiration_date.date }} |
+
+                            Status: {{ coupon.status }} |
+
+                            <a href="{% url "treats:treat_list" %}">Select a treat from the catalogue</a> |
+
+                            <a href="{% url "treats:treat_request" %}">Request a treat not in the catalogue</a>
+                        </li>
+                        <br>
+                    </div>
+                {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p>You have no coupons.</p>
+    {% endif %}
+
+{% endblock %}

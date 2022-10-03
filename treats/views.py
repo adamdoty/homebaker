@@ -1,11 +1,12 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.contrib import messages
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, get_list_or_404
 
 from .models import Treat, Note, Coupon
-from .forms import TreatForm, NoteForm, CouponForm
+from .forms import TreatForm, NoteForm, CouponForm, TreatRequestForm
 from .aws import upload_to_s3
 
 
@@ -16,7 +17,7 @@ def is_baker(user):
 
 # ------------------------------- VIEWS -------------------------------
 def treat_list(request):
-    treats = Treat.objects.all()
+    treats = get_list_or_404(Treat)
     return render(request, 'treats/list.html', context={'treats': treats})
 
 
@@ -126,10 +127,32 @@ def treat_note_delete(request, pk):
     return render(request, 'treats/delete.html', context={"treat": treat, "note": note})
 
 
+# maybe add a decorator here that requires the user have a redeemable coupon
+@login_required
+def treat_request(request):
+    """
+    After submitting a treat request form, the user gets redirected to the my coupons view,
+    they can see the coupon status has changed to IN REVIEW
+
+    When a treat request is submitted it
+    """
+    if request.method == "POST":
+
+        form = TreatRequestForm(data=request.POST)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Requested treat')
+            return redirect("treats:my_coupons")
+    else:
+        form = TreatRequestForm()
+    return render(request, 'treats/treat-request.html', context={"form": form})
+
+
 @user_passes_test(is_baker)
 @login_required
 def coupon_tracker(request):
-    coupons = Coupon.objects.all()
+    coupons = get_list_or_404(Coupon)
     print(coupons)
     return render(request, 'coupons/tracker.html', context={'coupons': coupons})
 
@@ -181,6 +204,13 @@ def coupon_delete(request, pk):
         messages.success(request, 'Coupon deleted')
         return redirect('treats:coupon_tracker')
     return render(request, 'treats/delete.html', context={'coupon': coupon})
+
+
+@login_required
+def my_coupons(request):
+    coupons = Coupon.objects.all().filter(recipient_id=request.user.id)
+    # coupons = get_list_or_404(Coupon, recipient_id=request.user.id)
+    return render(request, 'coupons/my-coupons.html', context={'coupons': coupons})
 
 
 def register(request):

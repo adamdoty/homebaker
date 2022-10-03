@@ -1,6 +1,5 @@
-from django.forms import DateInput, ModelForm, FileField, CharField, PasswordInput
+from django.forms import DateInput, ModelForm, FileField, CharField, TextInput, Textarea
 from django.contrib.auth.models import User
-
 
 from .models import Treat, Note, Coupon, Profile
 
@@ -42,14 +41,24 @@ class CouponForm(ModelForm):
         }
 
 
-# class UserForm(ModelForm):
-#
-#     class Meta:
-#         model = User
-#         fields = ('username', 'first_name', 'last_name', 'email')
-
-
 class ProfileForm(ModelForm):
     class Meta:
         model = Profile
         fields = ('is_baker_user',)
+
+
+class TreatRequestForm(ModelForm):
+    """A form for recipient users to requests treats not in the treat catalogue."""
+    title = CharField(widget=TextInput(attrs={'placeholder': 'i.e. Buckeyes'}))
+    description = CharField(widget=Textarea(attrs={'placeholder': 'i.e. Peanut butter balls coated in chocolate'}))
+    recipe_source = CharField(widget=Textarea(
+        attrs={'placeholder': 'i.e. Duff Bakes '
+                              '\nor '
+                              '\nhttps://www.amazon.com/Duff-Bakes-Think-Bake-Like/dp/0062349805'
+                              '\nor '
+                              '\nhttps://www.yahoo.com/entertainment/buckeyes-from-duff-bakes-1326919478968374.html'}))
+
+    class Meta:
+        model = Treat
+        fields = ['title', 'description', 'recipe_source']
+        labels = {'title': 'Title', 'description': 'Description', 'recipe_source': 'Recipe Source'}
