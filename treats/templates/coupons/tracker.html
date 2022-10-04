@@ -13,12 +13,19 @@
                         <li class="list-group-item">
                             {{ coupon.reason|title }} |
 
-                            {% if coupon.recipient %}{{ coupon.recipient }}
-                            {% else %}<a href="{% url "treats:coupon_edit" coupon.id %}">Assign Recipient</a>
+                            {% if coupon.recipient %}
+                                {{ coupon.recipient }}
+                            {% else %}
+                                <a href="{% url "treats:coupon_edit" coupon.id %}">Assign Recipient</a>
                             {% endif %} |
 
-                            {% if coupon.treat %}{{ coupon.treat }}
-                            {% else %}<a href="{% url "treats:coupon_edit" coupon.id %}">Assign Treat</a>
+                            {# If coupon is treat request -> link to treat approval page so baker can approve/reject #}
+                            {% if coupon.treat.is_request %}
+                                <a href="{% url "treats:treat_request_approval" coupon.id %}">Approve Treat</a>
+                            {% elif coupon.treat %}
+                                {{ coupon.treat }}
+                            {% else %}
+                                <a href="{% url "treats:coupon_edit" coupon.id %}">Assign Treat</a>
                             {% endif %}|
 
                             Due Date: {{ coupon.target_date.date }} |

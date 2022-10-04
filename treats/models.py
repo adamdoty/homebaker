@@ -1,13 +1,17 @@
 import datetime
 
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils import timezone
+from django.dispatch import receiver
 from django.utils.text import slugify
+from django.db.models.signals import post_save
+from django.contrib.auth.models import User
 
 
 class Treat(models.Model):
-    """A baked good the user has made before or plans to make."""
+    """
+    A baked good the user has made before.
+    """
 
     class Ratings(models.TextChoices):
         ONE_STAR = 1, '⭐'
@@ -23,9 +27,14 @@ class Treat(models.Model):
     cover_img = models.URLField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)
+
+    # rating should be determined by the cumulative review score
     rating = models.CharField(max_length=1, choices=Ratings.choices,
-                              default=Ratings.THREE_STARS)
+                              default=Ratings.THREE_STARS, null=True)
     recipe_source = models.TextField(max_length=250, blank=True)
+
+    # marking a treat as a request field will allow the baker user to approve requests
+    # is_request = models.BooleanField()
 
     class Meta:
         ordering = ['rating', 'created']
@@ -99,11 +108,15 @@ class Coupon(models.Model):
 
     # for coupons that "never expire" -> +100 years or something similar
     expiration_date = models.DateTimeField()
+
+    # represents the coupon redemption date, triggered when the treat is filled in
+    redemption_date = models.DateTimeField(null=True, blank=True)
+
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.NOT_SENT_YET)
 
     @property
     def is_redeemed(self):
-        return self.treat is not None
+        return self.redemption_date is not None
 
     class Meta:
         ordering = ['created']
@@ -111,12 +124,46 @@ class Coupon(models.Model):
             models.Index(fields=['created'])
         ]
 
+    def save(self, *args, **kwargs):
+        if self.treat is not None and self.redemption_date is None:
+            self.redemption_date = datetime.datetime.now()
+            self.status = self.Status.TO_DO
+
+        if self.recipient and self.treat is None:
+            self.status = self.Status.WAITING_FOR_RESPONSE
+
+        super(Coupon, self).save(*args, **kwargs)
+        # post saving, update the redemption_date field based on whether the treat has been selected
+        # only redeems the coupon the first time a treat is selected
+
     def __str__(self):
         return (
             f'For {self.reason.lower()} on '
             f'{self.target_date.strftime("%m/%d/%y")} | Expires'
             f' on {self.expiration_date.strftime("%m/%d/%y")}.'
         )
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    is_baker_user = models.BooleanField(default=False)
+
+    def __str__(self):
+        if self.is_baker_user:
+            return f'User {self.user.username}: Baker User'
+        else:
+            return f'User {self.user.username}: NOT a Baker User'
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
 
 # class Comment(models.Model):
 #     treat = models.ForeignKey(Treat, on_delete=models.CASCADE)

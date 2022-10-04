@@ -1,6 +1,7 @@
-from django.forms import DateInput, ModelForm, FileField
+from django.forms import DateInput, ModelForm, FileField, CharField, TextInput, Textarea
+from django.contrib.auth.models import User
 
-from .models import Treat, Note, Coupon
+from .models import Treat, Note, Coupon, Profile
 
 
 class TreatForm(ModelForm):
@@ -37,4 +38,29 @@ class CouponForm(ModelForm):
                 attrs={'class': 'form-control',
                        'placeholder': 'Select a date',
                        'type': 'date'}),
+        }
+
+
+class ProfileForm(ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('is_baker_user',)
+
+
+class TreatRequestForm(ModelForm):
+    """A form for recipient users to requests treats not in the treat catalogue."""
+
+    class Meta:
+        model = Treat
+        fields = ['title', 'description', 'recipe_source']
+        labels = {'title': 'Title', 'description': 'Description', 'recipe_source': 'Recipe Source'}
+        widgets = {
+            'title': TextInput(attrs={'placeholder': 'i.e. Buckeyes'}),
+            'description': Textarea(attrs={'placeholder': 'i.e. Peanut butter balls coated in chocolate'}),
+            'recipe_source': Textarea(
+                attrs={'placeholder': 'i.e. Duff Bakes '
+                                      '\nor '
+                                      '\nhttps://www.amazon.com/Duff-Bakes-Think-Bake-Like/dp/0062349805'
+                                      '\nor '
+                                      '\nhttps://www.yahoo.com/entertainment/buckeyes-from-duff-bakes-1326919478968374.html'})
         }
