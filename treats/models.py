@@ -89,6 +89,7 @@ class Coupon(models.Model):
     class Status(models.TextChoices):
         NOT_SENT_YET = 'Not sent yet'
         WAITING_FOR_RESPONSE = 'Waiting for response'
+        PENDING_APPROVAL = 'Pending Approval'
         TO_DO = 'To Do'
         IN_PROGRESS = 'In Progress'
         DONE = 'Done'
@@ -135,6 +136,9 @@ class Coupon(models.Model):
 
         if self.recipient and self.treat is None:
             self.status = self.Status.WAITING_FOR_RESPONSE
+
+        if self.treat.is_recipient_request:
+            self.status = self.Status.PENDING_APPROVAL
 
         super(Coupon, self).save(*args, **kwargs)
         # post saving, update the redemption_date field based on whether the treat has been selected

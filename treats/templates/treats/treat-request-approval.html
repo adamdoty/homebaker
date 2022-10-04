@@ -3,42 +3,44 @@
 {% load static %}
 {% load bootstrap5 %}
 
-{% block title %}My Treats Catalogue{% endblock %}
+{% block title %}Treat Requests{% endblock %}
 
 {% block content %}
     <hr>
-    {% if treats %}
+    {% if treat_requests %}
         <div class="row row-cols-1 row-cols-md-3 g-4">
-            {% for treat in treats %}
+            {% for treat_request in treat_requests %}
                 <div class="col">
                     <div class="card">
-                        <img src="{{ treat.cover_img }}" class="card-img-top" alt="Nothing here">
-                        {# previous image source: {% static "images/red_velvet_cupcake.jpg" %}#}
                         <div class="card-body">
-                            <h5 class="card-title">
-                                <a href="{% url "treats:treat_detail" treat.id %}">{{ treat.title }}</a>
-                            </h5>
-                            <p class="card-text">{{ treat.description }}</p>
-                            <p class="card-text">{% for i in ""|ljust:treat.rating %}⭐{% endfor %}</p>
+                            <h5 class="card-title">{{ treat_request.title }}</h5>
+                            <p class="card-text">{{ treat_request.description }}</p>
+                            <p class="card-text">{{ treat_request.recipe_source }}</p>
 
-                            {# Have a redeem coupon button that the user can press to fill in the treat of their coupon #}
-                            {% if redeemable_coupons %}
-                                <form action="{% url "treats:redeem_coupon" treat.id %}" method="post" class="form">
-                                    {% csrf_token %}
-                                    {% buttons %}
-                                        <button type="submit" class="btn btn-primary">
-                                            Redeem Coupon
-                                        </button>
-                                    {% endbuttons %}
-                                </form>
-                            {% endif %}
+                            {# Accept / Reject buttons #}
+                            <form action="{% url "treats:redeem_coupon" treat.id %}" method="post" class="form">
+                                {% csrf_token %}
+                                {% buttons %}
+                                    <button type="submit" class="btn btn-primary">
+                                        Approve
+                                    </button>
+                                {% endbuttons %}
+                            </form>
+                            <form action="{% url "treats:redeem_coupon" treat.id %}" method="post" class="form">
+                                {% csrf_token %}
+                                {% buttons %}
+                                    <button type="submit" class="btn btn-primary">
+                                        Reject
+                                    </button>
+                                {% endbuttons %}
+                            </form>
                         </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
     {% else %}
-        No treats here! <a href="{% url 'treats:treat_new' %}">Add New Treat</a>
+        No treat requests here!
     {% endif %}
 
 {% endblock %}
