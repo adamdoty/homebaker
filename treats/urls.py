@@ -20,4 +20,5 @@ urlpatterns = [
     path('delete/<int:pk>/coupon', views.coupon_edit, name='coupon_delete'),
     path('register', views.register, name='register'),
     path('my-coupons', views.my_coupons, name='my_coupons'),
+    path('redeem-coupon/treat-<int:pk>', views.redeem_coupon, name='redeem_coupon')
 ]

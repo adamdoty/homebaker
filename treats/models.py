@@ -30,17 +30,18 @@ class Treat(models.Model):
 
     # rating should be determined by the cumulative review score
     rating = models.CharField(max_length=1, choices=Ratings.choices,
-                              default=Ratings.THREE_STARS, null=True)
-    recipe_source = models.TextField(max_length=250, blank=True)
+                              default=Ratings.THREE_STARS)
+    recipe_source = models.TextField(max_length=250)
 
     # marking a treat as a request field will allow the baker user to approve requests
-    # is_request = models.BooleanField()
+    is_recipient_request = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['rating', 'created']
+        ordering = ['-rating', 'created', 'is_recipient_request']
         indexes = [
-            models.Index(fields=['-rating']),
-            models.Index(fields=['created'])
+            models.Index(fields=['rating']),
+            models.Index(fields=['created']),
+            models.Index(fields=['is_recipient_request'])
         ]
 
     def save(self, *args, **kwargs):
@@ -48,7 +49,10 @@ class Treat(models.Model):
         super(Treat, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.title
+        if self.is_recipient_request:
+            return f'Recipient Request: {self.title}'
+        else:
+            return self.title
 
 
 class Note(models.Model):
@@ -164,21 +168,3 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
-
-# class Comment(models.Model):
-#     treat = models.ForeignKey(Treat, on_delete=models.CASCADE)
-#     body = models.TextField()
-#     publish = models.DateTimeField(default=timezone.now)
-#     created = models.DateTimeField(auto_now_add=True)
-#     updated = models.DateTimeField(auto_now=True)
-#     author = models.ForeignKey(User, on_delete=models.CASCADE)
-#
-#
-# class Review(models.Model):
-#     treat = models.ForeignKey(Treat, on_delete=models.CASCADE)
-#     body = models.TextField()
-#     rating = models.IntegerField()
-#     publish = models.DateTimeField(default=timezone.now)
-#     created = models.DateTimeField(auto_now_add=True)
-#     updated = models.DateTimeField(auto_now=True)
-#     author = models.ForeignKey(User, on_delete=models.CASCADE)
