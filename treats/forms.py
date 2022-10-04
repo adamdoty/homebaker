@@ -49,16 +49,18 @@ class ProfileForm(ModelForm):
 
 class TreatRequestForm(ModelForm):
     """A form for recipient users to requests treats not in the treat catalogue."""
-    title = CharField(widget=TextInput(attrs={'placeholder': 'i.e. Buckeyes'}))
-    description = CharField(widget=Textarea(attrs={'placeholder': 'i.e. Peanut butter balls coated in chocolate'}))
-    recipe_source = CharField(widget=Textarea(
-        attrs={'placeholder': 'i.e. Duff Bakes '
-                              '\nor '
-                              '\nhttps://www.amazon.com/Duff-Bakes-Think-Bake-Like/dp/0062349805'
-                              '\nor '
-                              '\nhttps://www.yahoo.com/entertainment/buckeyes-from-duff-bakes-1326919478968374.html'}))
 
     class Meta:
         model = Treat
         fields = ['title', 'description', 'recipe_source']
         labels = {'title': 'Title', 'description': 'Description', 'recipe_source': 'Recipe Source'}
+        widgets = {
+            'title': TextInput(attrs={'placeholder': 'i.e. Buckeyes'}),
+            'description': Textarea(attrs={'placeholder': 'i.e. Peanut butter balls coated in chocolate'}),
+            'recipe_source': Textarea(
+                attrs={'placeholder': 'i.e. Duff Bakes '
+                                      '\nor '
+                                      '\nhttps://www.amazon.com/Duff-Bakes-Think-Bake-Like/dp/0062349805'
+                                      '\nor '
+                                      '\nhttps://www.yahoo.com/entertainment/buckeyes-from-duff-bakes-1326919478968374.html'})
+        }

@@ -30,8 +30,8 @@ class Treat(models.Model):
 
     # rating should be determined by the cumulative review score
     rating = models.CharField(max_length=1, choices=Ratings.choices,
-                              default=Ratings.THREE_STARS, null=True, blank=True)
-    recipe_source = models.TextField(max_length=250, null=True, blank=True)
+                              default=Ratings.THREE_STARS, null=True)
+    recipe_source = models.TextField(max_length=250, blank=True)
 
     # marking a treat as a request field will allow the baker user to approve requests
     # is_request = models.BooleanField()
