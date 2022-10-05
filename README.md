@@ -9,3 +9,5 @@
 [Flow Chart](https://app.milanote.com/1OG8dl1msjeV3L?p=oxwoqIeuKLU)
 
 [Calendar](https://www.huiwenteo.com/normal/2018/07/24/django-calendar.html)
+
+![alt text](Homebaker_FlowChart.drawio.png)
