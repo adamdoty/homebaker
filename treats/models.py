@@ -137,7 +137,7 @@ class Coupon(models.Model):
         if self.recipient and self.treat is None:
             self.status = self.Status.WAITING_FOR_RESPONSE
 
-        if self.treat.is_recipient_request:
+        if self.treat and self.treat.is_recipient_request:
             self.status = self.Status.PENDING_APPROVAL
 
         super(Coupon, self).save(*args, **kwargs)
@@ -172,3 +172,5 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
+
+

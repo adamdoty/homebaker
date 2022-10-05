@@ -223,7 +223,7 @@ def coupon_delete(request, pk):
 
 @login_required
 def my_coupons(request):
-    coupons = Coupon.objects.all().filter(recipient_id=request.user.id)
+    coupons = Coupon.objects.filter(recipient_id=request.user.id)
     # coupons = get_list_or_404(Coupon, recipient_id=request.user.id)
     return render(request, 'coupons/my-coupons.html', context={'coupons': coupons})
 
