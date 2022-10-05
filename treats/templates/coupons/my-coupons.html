@@ -19,9 +19,14 @@
 
                             Status: {{ coupon.status }} |
 
-                            <a href="{% url "treats:treat_list" %}">Select a treat from the catalogue</a> |
+                            {% if coupon.treat %}
+                                <a href="{% url "treats:treat_detail" coupon.treat.id %}">{{ coupon.treat.title }}</a>
+                            {% else %}
+                                <a href="{% url "treats:treat_list" %}">Select a treat from the catalogue</a> |
+                                <a href="{% url "treats:treat_request" %}">Request a treat not in the catalogue</a>
+                            {% endif %}
 
-                            <a href="{% url "treats:treat_request" %}">Request a treat not in the catalogue</a>
+
                         </li>
                         <br>
                     </div>

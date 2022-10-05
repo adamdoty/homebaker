@@ -13,7 +13,6 @@
                 <div class="col">
                     <div class="card">
                         <img src="{{ treat.cover_img }}" class="card-img-top" alt="Nothing here">
-                        {# previous image source: {% static "images/red_velvet_cupcake.jpg" %}#}
                         <div class="card-body">
                             <h5 class="card-title">
                                 <a href="{% url "treats:treat_detail" treat.id %}">{{ treat.title }}</a>
@@ -21,9 +20,8 @@
                             <p class="card-text">{{ treat.description }}</p>
                             <p class="card-text">{% for i in ""|ljust:treat.rating %}⭐{% endfor %}</p>
 
-                            {# Have a redeem coupon button that the user can press to fill in the treat of their coupon #}
-                            {% if user.coupon %}
-                                <form action="{% url 'treats:my_coupons' %}" method="post" class="form">
+                            {% if redeemable_coupons %}
+                                <form action="{% url "treats:redeem_coupon" treat.id %}" method="post" class="form">
                                     {% csrf_token %}
                                     {% buttons %}
                                         <button type="submit" class="btn btn-primary">

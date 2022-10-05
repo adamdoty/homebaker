@@ -17,8 +17,13 @@ def is_baker(user):
 
 # ------------------------------- VIEWS -------------------------------
 def treat_list(request):
-    treats = get_list_or_404(Treat)
-    return render(request, 'treats/list.html', context={'treats': treats})
+    treats = get_list_or_404(Treat, is_recipient_request=False)
+    if request.user.is_anonymous is False:
+        redeemable_coupons = request.user.coupon_set.filter(treat=None)
+        context = {'treats': treats, 'redeemable_coupons': redeemable_coupons}
+    else:
+        context = {'treats': treats}
+    return render(request, 'treats/list.html', context=context)
 
 
 def treat_detail(request, pk):
@@ -141,9 +146,13 @@ def treat_request(request):
         form = TreatRequestForm(data=request.POST)
 
         if form.is_valid():
-            form.save()
+            treat = form.save(commit=False)
+            treat.user = request.user
+            treat.is_recipient_request = True
+
+            treat.save()
             messages.success(request, 'Requested treat')
-            return redirect("treats:my_coupons")
+            return redirect("treats:redeem_coupon", pk=treat.id)
     else:
         form = TreatRequestForm()
     return render(request, 'treats/treat-request.html', context={"form": form})
@@ -151,9 +160,15 @@ def treat_request(request):
 
 @user_passes_test(is_baker)
 @login_required
+def treat_request_approval(request):
+    treat_requests = get_list_or_404(Treat, is_recipient_request=True)
+    return render(request, 'treats/treat-request-approval.html', context={'treat_requests': treat_requests})
+
+
+@user_passes_test(is_baker)
+@login_required
 def coupon_tracker(request):
     coupons = get_list_or_404(Coupon)
-    print(coupons)
     return render(request, 'coupons/tracker.html', context={'coupons': coupons})
 
 
@@ -208,9 +223,19 @@ def coupon_delete(request, pk):
 
 @login_required
 def my_coupons(request):
-    coupons = Coupon.objects.all().filter(recipient_id=request.user.id)
+    coupons = Coupon.objects.filter(recipient_id=request.user.id)
     # coupons = get_list_or_404(Coupon, recipient_id=request.user.id)
     return render(request, 'coupons/my-coupons.html', context={'coupons': coupons})
+
+
+@login_required
+def redeem_coupon(request, pk):
+    treat = get_object_or_404(Treat, pk=pk)
+    # get the first redeemable coupon
+    coupon = request.user.coupon_set.filter(treat=None)[0]
+    coupon.treat = treat
+    coupon.save()
+    return redirect('treats:my_coupons')
 
 
 def register(request):

@@ -5,3 +5,5 @@
 [Django Bootstrap](https://django-bootstrap-v5.readthedocs.io/en/latest/quickstart.html)
 
 [AWS Image Storage](https://www.section.io/engineering-education/using-amazon-web-service-for-django-media-files-storage/#setting-up-gallery-app)
+
+[Flow Chart](https://app.milanote.com/1OG7x01z3u7d3j?p=J54lQLnF5kz)

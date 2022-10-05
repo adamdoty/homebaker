@@ -1,10 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "treats/base.html" %}
 
-</body>
-</html>
+{% load static %}
+{% load bootstrap5 %}
+
+{% block title %}Treat Requests{% endblock %}
+
+{% block content %}
+    <hr>
+    {% if treat_requests %}
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for treat_request in treat_requests %}
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ treat_request.title }}</h5>
+                            <p class="card-text">{{ treat_request.description }}</p>
+                            <p class="card-text">{{ treat_request.recipe_source }}</p>
+
+                            {# Accept / Reject buttons #}
+                            <form action="{% url "treats:redeem_coupon" treat.id %}" method="post" class="form">
+                                {% csrf_token %}
+                                {% buttons %}
+                                    <button type="submit" class="btn btn-primary">
+                                        Approve
+                                    </button>
+                                {% endbuttons %}
+                            </form>
+                            <form action="{% url "treats:redeem_coupon" treat.id %}" method="post" class="form">
+                                {% csrf_token %}
+                                {% buttons %}
+                                    <button type="submit" class="btn btn-primary">
+                                        Reject
+                                    </button>
+                                {% endbuttons %}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        No treat requests here!
+    {% endif %}
+
+{% endblock %}
