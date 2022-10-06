@@ -29,17 +29,17 @@ class Treat(models.Model):
     edited = models.DateTimeField(auto_now=True)
 
     # rating should be determined by the cumulative review score
-    rating = models.CharField(max_length=1, choices=Ratings.choices,
-                              default=Ratings.THREE_STARS)
+    # rating = models.CharField(max_length=1, choices=Ratings.choices,
+    #                           default=Ratings.THREE_STARS)
     recipe_source = models.TextField(max_length=250)
 
     # marking a treat as a request field will allow the baker user to approve requests
     is_recipient_request = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['-rating', 'created', 'is_recipient_request']
+        ordering = ['created', 'is_recipient_request']  # '-rating'
         indexes = [
-            models.Index(fields=['rating']),
+            # models.Index(fields=['rating']),
             models.Index(fields=['created']),
             models.Index(fields=['is_recipient_request'])
         ]
@@ -194,7 +194,6 @@ class Event(models.Model):
 
     def __str__(self):
         return f"{self.title}'s {self.description}"
-
 
 # ---------------- Tried to autogenerate an event upon creating a coupon, couldn't quite figure it out ----------------
 

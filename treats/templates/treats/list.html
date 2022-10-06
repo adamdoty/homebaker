@@ -12,13 +12,13 @@
             {% for treat in treats %}
                 <div class="col">
                     <div class="card">
-                        <img src="{{ treat.cover_img }}" class="card-img-top" alt="Nothing here">
+                        <img src="{{ treat.cover_img }}" class="card-img-top" alt="No Image">
                         <div class="card-body">
                             <h5 class="card-title">
                                 <a href="{% url "treats:treat_detail" treat.id %}">{{ treat.title }}</a>
                             </h5>
                             <p class="card-text">{{ treat.description }}</p>
-                            <p class="card-text">{% for i in ""|ljust:treat.rating %}⭐{% endfor %}</p>
+                            {# <p class="card-text">{% for i in ""|ljust:treat.rating %}⭐{% endfor %}</p> #}
 
                             {% if redeemable_coupons %}
                                 <form action="{% url "treats:redeem_coupon" treat.id %}" method="post" class="form">

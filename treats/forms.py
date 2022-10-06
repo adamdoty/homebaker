@@ -9,9 +9,9 @@ class TreatForm(ModelForm):
 
     class Meta:
         model = Treat
-        fields = ['title', 'description', 'img_upload', 'rating', 'recipe_source']
-        labels = {'title': 'Title', 'description': 'Description', 'cover_img': 'Cover_img', 'rating': 'Rating',
-                  'recipe_source': 'Recipe source'}
+        fields = ['title', 'description', 'img_upload', 'recipe_source']  # 'rating',
+        labels = {'title': 'Title', 'description': 'Description', 'cover_img': 'Cover_img',
+                  'recipe_source': 'Recipe source'}  # 'rating': 'Rating',
 
 
 class NoteForm(ModelForm):
