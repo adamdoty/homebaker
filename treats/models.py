@@ -46,7 +46,7 @@ class Treat(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
-        super(Treat, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         if self.is_recipient_request:
@@ -140,7 +140,7 @@ class Coupon(models.Model):
         if self.treat and self.treat.is_recipient_request:
             self.status = self.Status.PENDING_APPROVAL
 
-        super(Coupon, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         # post saving, update the redemption_date field based on whether the treat has been selected
         # only redeems the coupon the first time a treat is selected
 
