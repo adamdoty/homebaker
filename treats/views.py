@@ -39,7 +39,7 @@ def treat_list(request):
 
 
 def treat_detail(request, pk):
-    treat = get_object_or_404(Treat, pk=pk)
+    treat = get_object_or_404(Treat, pk=pk, is_recipient_request=False)
     notes = treat.notes.filter(treat_id=treat.id)
     return render(request, 'treats/treat-detail.html', context={'treat': treat, 'notes': notes})
 
