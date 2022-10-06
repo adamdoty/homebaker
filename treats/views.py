@@ -1,18 +1,30 @@
+from datetime import datetime
+
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.utils.safestring import mark_safe
 from django.contrib.auth import login
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect, get_list_or_404
 
-from .models import Treat, Note, Coupon
+from .models import Treat, Note, Coupon, Event
 from .forms import TreatForm, NoteForm, CouponForm, TreatRequestForm
 from .aws import upload_to_s3
+from .utils import Calendar
 
 
 # -------- TEST FUNCTION --------
 def is_baker(user):
     return user.profile.is_baker_user
+
+
+def get_date(requested_day):
+    if requested_day:
+        year, month = (int(x) for x in requested_day.split('-'))
+        return datetime(year, month, day=1)
+    else:
+        return datetime.today()
 
 
 # ------------------------------- VIEWS -------------------------------
@@ -27,7 +39,7 @@ def treat_list(request):
 
 
 def treat_detail(request, pk):
-    treat = get_object_or_404(Treat, pk=pk)
+    treat = get_object_or_404(Treat, pk=pk, is_recipient_request=False)
     notes = treat.notes.filter(treat_id=treat.id)
     return render(request, 'treats/treat-detail.html', context={'treat': treat, 'notes': notes})
 
@@ -168,8 +180,11 @@ def treat_request_approval(request):
 @user_passes_test(is_baker)
 @login_required
 def coupon_tracker(request):
+    d = get_date(request.GET.get('day', None))
+    cal = Calendar(d.year, d.month)
+    html_cal = cal.formatmonth(withyear=True)
     coupons = get_list_or_404(Coupon)
-    return render(request, 'coupons/tracker.html', context={'coupons': coupons})
+    return render(request, 'coupons/tracker.html', context={'coupons': coupons, 'calendar': mark_safe(html_cal)})
 
 
 @user_passes_test(is_baker)

@@ -1,5 +1,6 @@
 {% extends "treats/base.html" %}
 {% load static %}
+{% load bootstrap5 %}
 
 {% block title %}Coupon Tracker{% endblock %}
 
@@ -7,6 +8,9 @@
     <hr>
     {% if coupons %}
         <div class="container">
+            <div class="row">
+                {{ calendar }}
+            </div>
             <ul class="list-group">
                 {% for coupon in coupons %}
                     <div class="row">

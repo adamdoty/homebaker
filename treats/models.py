@@ -46,7 +46,7 @@ class Treat(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
-        super(Treat, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         if self.is_recipient_request:
@@ -140,7 +140,7 @@ class Coupon(models.Model):
         if self.treat and self.treat.is_recipient_request:
             self.status = self.Status.PENDING_APPROVAL
 
-        super(Coupon, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         # post saving, update the redemption_date field based on whether the treat has been selected
         # only redeems the coupon the first time a treat is selected
 
@@ -174,3 +174,40 @@ def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 
 
+class Event(models.Model):
+    """
+    An event is associated with a coupon recipient and one of the recipient's coupons.
+    The title of the event should be the recipient's username.
+    The description should be the treat associated with the coupon.
+    Upon creation of a coupon (or a user is selected for a coupon), a corresponding event should be created
+    Events should remain in the calendar after completed and be updated with visual representation for coupon state:
+        - 1 week until target date: event in calendar turns yellow
+        - past target date: event in calendar turns red
+        - coupon fulfilled: events turns green
+        - coupon expired: event turns gray
+    """
+    coupon = models.ForeignKey(Coupon, on_delete=models.DO_NOTHING, null=True)
+
+    title = models.CharField(max_length=250, blank=True)  # recipient.username
+    description = models.CharField(max_length=250, blank=True)  # coupon.treat.title
+    event_date = models.DateTimeField(null=True)  # coupon.target_date
+
+    def __str__(self):
+        return f"{self.title}'s {self.description}"
+
+
+# ---------------- Tried to autogenerate an event upon creating a coupon, couldn't quite figure it out ----------------
+
+# @receiver(post_save, sender=Coupon)
+# def create_event(sender, instance, created, **kwargs):
+#     if created:
+#         Event.objects.create(coupon=instance)
+#
+#
+# @receiver(post_save, sender=Coupon)
+# def save_event(sender, instance, **kwargs):
+#     print(instance, type(instance), '******************************************************************************')
+#     instance.event.title = instance.event.coupon.recipient
+#     instance.event.description = instance.event.coupon.reason
+#     instance.event.event_date = instance.event.coupon.target_date
+#     instance.event.save()

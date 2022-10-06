@@ -6,4 +6,8 @@
 
 [AWS Image Storage](https://www.section.io/engineering-education/using-amazon-web-service-for-django-media-files-storage/#setting-up-gallery-app)
 
-[Flow Chart](https://app.milanote.com/1OG7x01z3u7d3j?p=J54lQLnF5kz)
+[Flow Chart](https://app.milanote.com/1OG8dl1msjeV3L?p=oxwoqIeuKLU)
+
+[Calendar](https://www.huiwenteo.com/normal/2018/07/24/django-calendar.html)
+
+![alt text](Homebaker_FlowChart.drawio.png)
