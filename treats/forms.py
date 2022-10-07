@@ -1,5 +1,4 @@
-from django.forms import DateInput, ModelForm, FileField, CharField, TextInput, Textarea
-from django.contrib.auth.models import User
+from django.forms import DateInput, ModelForm, FileField, TextInput, Textarea, FileInput
 
 from .models import Treat, Note, Coupon, Profile
 

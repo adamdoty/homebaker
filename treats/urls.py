@@ -14,11 +14,13 @@ urlpatterns = [
     path('delete/<int:pk>/note', views.treat_note_delete, name='treat_note_delete'),
     path('treat-request', views.treat_request, name='treat_request'),
     path('coupon-tracker', views.coupon_tracker, name='coupon_tracker'),
-    path('coupon/<int:pk>', views.coupon_detail, name='coupon_detail'),
     path('new-coupon/', views.coupon_new, name='coupon_new'),
-    path('edit/<int:pk>coupon', views.coupon_edit, name='coupon_edit'),
-    path('delete/<int:pk>/coupon', views.coupon_edit, name='coupon_delete'),
+    path('edit/coupon/<int:pk>', views.coupon_edit, name='coupon_edit'),
+    path('delete/coupon/<int:pk>', views.coupon_delete, name='coupon_delete'),
     path('register', views.register, name='register'),
     path('my-coupons', views.my_coupons, name='my_coupons'),
-    path('redeem-coupon/treat-<int:pk>', views.redeem_coupon, name='redeem_coupon')
+    path('redeem-coupon/treat/<int:pk>', views.redeem_coupon, name='redeem_coupon'),
+    path('treat-request-approval', views.treat_request_approval, name='treat_request_approval'),
+    path('accept-treat-request/treat/<int:pk>', views.accept_treat_request, name='accept_treat_request'),
+    path('delete-treat-request/treat/<int:pk>', views.reject_treat_request, name='reject_treat_request'),
 ]

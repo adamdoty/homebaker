@@ -1,0 +1,17 @@
+{% extends "treats/base.html" %}
+
+{% load bootstrap5 %}
+{% load static %}
+
+{% block title %}Confirm Delete{% endblock %}
+
+{% block content %}
+
+    <form method="post">
+        {% csrf_token %}
+        <p>Are you sure you want to delete this coupon: {{ coupon.reason|title }}?</p>
+        <input type="submit" value="Delete"/><br>
+        <a href="{% url "treats:coupon_tracker" %}">Go Back</a>
+    </form>
+
+{% endblock %}
