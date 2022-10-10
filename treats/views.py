@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import datetime, timedelta
+import calendar
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import UserCreationForm
@@ -13,7 +14,7 @@ from .aws import upload_to_s3, delete_from_s3
 from .utils import Calendar
 
 
-# -------- TEST FUNCTION --------
+# ----------------------------- FUNCTIONS -----------------------------
 def is_baker(user):
     return user.profile.is_baker_user
 
@@ -26,9 +27,29 @@ def get_date(requested_day):
         return datetime.today()
 
 
+def previous_month(requested_day):
+    first = requested_day.replace(day=1)
+    previous_month = first - timedelta(days=1)
+    month = 'month=' + str(previous_month.year) + '-' + str(previous_month.month)
+    return month
+
+
+def next_month(requested_day):
+    days_in_month = calendar.monthrange(requested_day.year, requested_day.month)[1]
+    last = requested_day.replace(day=days_in_month)
+    next_month = last + timedelta(days=1)
+    month = 'month=' + str(next_month.year) + '-' + str(next_month.month)
+    return month
+
+
+def get_next_and_previous_months(request):
+    d = get_date(request.GET.get('month', None))
+    return previous_month(d), next_month(d)
+
+
 # ------------------------------- VIEWS -------------------------------
 def treat_list(request):
-    treats = get_list_or_404(Treat, is_recipient_request=False, cover_img__isnull=False)
+    treats = Treat.objects.filter(is_recipient_request=False, cover_img__isnull=False)
     if request.user.is_anonymous is False:
         redeemable_coupons = request.user.coupon_set.filter(treat=None)
         context = {'treats': treats, 'redeemable_coupons': redeemable_coupons}
@@ -101,7 +122,7 @@ def treat_edit(request, pk):
 @user_passes_test(is_baker)
 @login_required
 def treat_delete(request, pk):
-    treat = get_object_or_404(Treat, pk=pk, user=request.user)
+    treat = get_object_or_404(Treat, pk=pk)
 
     if request.method == "POST":
 
@@ -172,6 +193,9 @@ def treat_request(request):
 
     When a treat request is submitted it
     """
+    # redeemable_coupons = request.user.coupon_set.filter(treat=None)
+    redeemable_coupons = get_list_or_404(request.user.coupon_set, treat=None)
+
     if request.method == "POST":
 
         form = TreatRequestForm(data=request.POST)
@@ -200,10 +224,16 @@ def treat_request_approval(request):
 @login_required
 def coupon_tracker(request):
     d = get_date(request.GET.get('day', None))
+    previous_month, next_month = get_next_and_previous_months(request)
+
     cal = Calendar(d.year, d.month)
     html_cal = cal.formatmonth(withyear=True)
-    coupons = get_list_or_404(Coupon)
-    return render(request, 'coupons/tracker.html', context={'coupons': coupons, 'calendar': mark_safe(html_cal)})
+
+    coupons = Coupon.objects.all()
+    return render(request, 'coupons/tracker.html', context={'coupons': coupons,
+                                                            'calendar': mark_safe(html_cal),
+                                                            'previous_month': previous_month,
+                                                            'next_month': next_month})
 
 
 @user_passes_test(is_baker)

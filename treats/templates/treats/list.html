@@ -18,7 +18,6 @@
                                 <a href="{% url "treats:treat_detail" treat.id %}">{{ treat.title }}</a>
                             </h5>
                             <p class="card-text">{{ treat.description }}</p>
-                            {# <p class="card-text">{% for i in ""|ljust:treat.rating %}⭐{% endfor %}</p> #}
 
                             {% if redeemable_coupons %}
                                 <form action="{% url "treats:redeem_coupon" treat.id %}" method="post" class="form">

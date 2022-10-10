@@ -27,19 +27,14 @@ class Treat(models.Model):
     cover_img = models.URLField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)
-
-    # rating should be determined by the cumulative review score
-    # rating = models.CharField(max_length=1, choices=Ratings.choices,
-    #                           default=Ratings.THREE_STARS)
     recipe_source = models.TextField(max_length=250)
 
     # marking a treat as a request field will allow the baker user to approve requests
     is_recipient_request = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['created', 'is_recipient_request']  # '-rating'
+        ordering = ['created', 'is_recipient_request']
         indexes = [
-            # models.Index(fields=['rating']),
             models.Index(fields=['created']),
             models.Index(fields=['is_recipient_request'])
         ]
@@ -91,27 +86,24 @@ class Coupon(models.Model):
         WAITING_FOR_RESPONSE = 'Waiting for response'
         PENDING_APPROVAL = 'Pending Approval'
         TO_DO = 'To Do'
-        IN_PROGRESS = 'In Progress'
+        PAST_DUE = 'Past Due'
         DONE = 'Done'
         EXPIRED = 'Expired'
 
     reason = models.CharField(max_length=50)
     recipient = models.ForeignKey(User, on_delete=models.CASCADE,
                                   null=True, blank=True)
-    # maybe a way to have placeholder user would be nice
 
     # gets written when coupon is redeemed
     treat = models.ForeignKey(Treat, on_delete=models.SET_NULL,
                               null=True, blank=True)
-
-    # if baker is filling out, they can select from catalogue, otherwise leave empty for recipient to fill out
 
     created = models.DateTimeField(auto_now_add=True)
 
     # i.e. the birthday, 1st day of promotion, etc
     target_date = models.DateTimeField(default=timezone.now)
 
-    # for coupons that "never expire" -> +100 years or something similar
+    # for coupons that "never expire" -> +100 years
     expiration_date = models.DateTimeField()
 
     # represents the coupon redemption date, triggered when the treat is filled in
@@ -174,26 +166,7 @@ def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 
 
-class Event(models.Model):
-    """
-    An event is associated with a coupon recipient and one of the recipient's coupons.
-    The title of the event should be the recipient's username.
-    The description should be the treat associated with the coupon.
-    Upon creation of a coupon (or a user is selected for a coupon), a corresponding event should be created
-    Events should remain in the calendar after completed and be updated with visual representation for coupon state:
-        - 1 week until target date: event in calendar turns yellow
-        - past target date: event in calendar turns red
-        - coupon fulfilled: events turns green
-        - coupon expired: event turns gray
-    """
-    coupon = models.ForeignKey(Coupon, on_delete=models.DO_NOTHING, null=True)
 
-    title = models.CharField(max_length=250, blank=True)  # recipient.username
-    description = models.CharField(max_length=250, blank=True)  # coupon.treat.title
-    event_date = models.DateTimeField(null=True)  # coupon.target_date
-
-    def __str__(self):
-        return f"{self.title}'s {self.description}"
 
 # ---------------- Tried to autogenerate an event upon creating a coupon, couldn't quite figure it out ----------------
 

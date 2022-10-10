@@ -17,8 +17,6 @@
                             <p class="card-text">{{ treat_request.description }}</p>
                             <p class="card-text">{{ treat_request.recipe_source }}</p>
 
-                            {# Accept / Reject buttons #}
-                            {# This button should change the treat boolean field #}
                             <form action="{% url "treats:accept_treat_request" treat_request.id %}" method="post"
                                   class="form">
                                 {% csrf_token %}

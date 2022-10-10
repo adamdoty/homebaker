@@ -8,6 +8,8 @@
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 
+
+
 {% block bootstrap5_content %}
 
     <div class="container-fluid">
@@ -48,13 +50,15 @@
                                         </a>
                                     </li>
                                 {% else %}
-                                    <li>
-                                        <a href="{% url 'treats:treat_request' %}" class="nav-link px-0">
+                                    {% if redeemable_coupons %}
+                                        <li>
+                                            <a href="{% url 'treats:treat_request' %}" class="nav-link px-0">
                                         <span class="d-none d-sm-inline">
                                             Treat Request
                                         </span>
-                                        </a>
-                                    </li>
+                                            </a>
+                                        </li>
+                                    {% endif %}
                                 {% endif %}
                             </ul>
                         </li>

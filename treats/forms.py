@@ -1,4 +1,5 @@
-from django.forms import DateInput, ModelForm, FileField, TextInput, Textarea, FileInput
+from django.forms import DateInput, ModelForm, FileField, TextInput, Textarea, MultipleChoiceField
+from django.contrib.auth.models import User
 
 from .models import Treat, Note, Coupon, Profile
 
@@ -21,6 +22,11 @@ class NoteForm(ModelForm):
 
 
 class CouponForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(CouponForm, self).__init__()
+        self.fields['recipient'].queryset = User.objects.filter(profile__is_baker_user=False)
+        self.fields['treat'].queryset = Treat.objects.filter(is_recipient_request=False)
+
     class Meta:
         model = Coupon
         fields = ['reason', 'recipient', 'treat', 'target_date', 'expiration_date']

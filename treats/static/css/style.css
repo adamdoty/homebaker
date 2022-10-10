@@ -2,6 +2,8 @@
     width: 98%;
     margin: auto;
     font-size: 13px;
+    display: flex;
+    order: 1;
 }
 
 .calendar tr, .calendar td {
@@ -14,10 +16,20 @@
     font-size: 18px;
 }
 
+
 .calendar td {
     width: 200px;
     height: 150px;
     padding: 20px 0px 0px 5px;
+}
+
+.calendar ul {
+    height: 100%;
+    padding: 0px 5px 0px 20px;
+}
+
+.calendar a {
+    color: #17a2b8;
 }
 
 .month {
@@ -26,14 +38,4 @@
 
 .date {
     font-size: 16px;
-}
-
-/*TESTING .calendar*/
-.calendar ul {
-    height: 100%;
-    padding: 0px 5px 0px 20px;
-}
-
-.calendar a {
-    color: #17a2b8;
 }
