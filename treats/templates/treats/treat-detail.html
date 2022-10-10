@@ -10,27 +10,27 @@
         <img class="w-25 h-25" src="{{ treat.cover_img }}" alt="no picture for this treat yet">
         <p>{{ treat.description }}</p>
         {# <p>{% for i in ""|ljust:treat.rating %}⭐{% endfor %}</p> #}
-        <p>********** Review Placeholder **********</p>
+        {# <p>********** Review Placeholder **********</p>#}
         <p>{{ treat.recipe_source|urlize }}</p>
 
+        {% if user.profile.is_baker_user %}
+            <ul>
+                {% for note in notes %}
+                    <div class="note">
+                        <p>{{ note.created }}</p>
+                        {{ note.body|linebreaks }}
+                        <a href="{% url "treats:treat_note_edit" note.id %}">Edit Note</a><br>
+                        <a href="{% url "treats:treat_note_delete" note.id %}">Delete Note</a><br>
+                    </div>
+                {% empty %}
+                    <p>There are no notes yet.</p>
+                {% endfor %}
+            </ul>
 
-        <ul>
-            {% for note in notes %}
-                <div class="note">
-                    <p>{{ note.created }}</p>
-                    {{ note.body|linebreaks }}
-                    <a href="{% url "treats:treat_note_edit" note.id %}">Edit Note</a><br>
-                    <a href="{% url "treats:treat_note_delete" note.id %}">Delete Note</a><br>
-                </div>
-            {% empty %}
-                <p>There are no notes yet.</p>
-            {% endfor %}
-        </ul>
-
-        <a href="{% url "treats:treat_note" treat.id %}">Add Note</a><br>
-        <a href="{% url "treats:treat_edit" treat.id %}">Edit Treat</a><br>
-        <a href="{% url "treats:treat_delete" treat.id %}">Delete Treat</a>
-
+            <a href="{% url "treats:treat_note" treat.id %}">Add Note</a><br>
+            <a href="{% url "treats:treat_edit" treat.id %}">Edit Treat</a><br>
+            <a href="{% url "treats:treat_delete" treat.id %}">Delete Treat</a>
+        {% endif %}
     </div>
 
 {% endblock %}

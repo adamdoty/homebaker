@@ -28,6 +28,20 @@ def upload_to_s3(file, acl="public-read"):
     return s3_file_link
 
 
+def delete_from_s3(link: str, acl="public-read"):
+    s3_bucket = settings.AWS_STORAGE_BUCKET_NAME
+    aws_key = settings.AWS_ACCESS_KEY_ID
+    aws_secret = settings.AWS_SECRET_ACCESS_KEY
+    aws_region = settings.AWS_S3_REGION_NAME
+
+    session = boto3.Session(aws_access_key_id=aws_key, aws_secret_access_key=aws_secret)
+
+    key = link.split('/')[-1]
+
+    s3 = session.resource("s3")
+    s3.Object(s3_bucket, key).delete()
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--file", required=True)

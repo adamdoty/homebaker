@@ -18,7 +18,9 @@
                             <p class="card-text">{{ treat_request.recipe_source }}</p>
 
                             {# Accept / Reject buttons #}
-                            <form action="{% url "treats:redeem_coupon" treat.id %}" method="post" class="form">
+                            {# This button should change the treat boolean field #}
+                            <form action="{% url "treats:accept_treat_request" treat_request.id %}" method="post"
+                                  class="form">
                                 {% csrf_token %}
                                 {% buttons %}
                                     <button type="submit" class="btn btn-primary">
@@ -26,7 +28,8 @@
                                     </button>
                                 {% endbuttons %}
                             </form>
-                            <form action="{% url "treats:redeem_coupon" treat.id %}" method="post" class="form">
+                            <form action="{% url "treats:reject_treat_request" treat_request.id %}" method="post"
+                                  class="form">
                                 {% csrf_token %}
                                 {% buttons %}
                                     <button type="submit" class="btn btn-primary">
@@ -39,8 +42,10 @@
                 </div>
             {% endfor %}
         </div>
+        <a href="{% url 'treats:coupon_tracker' %}" class="nav-link px-0">Return to Coupon Tracker</a>
     {% else %}
         No treat requests here!
+        <a href="{% url 'treats:coupon_tracker' %}" class="nav-link px-0">Coupon Tracker</a>
     {% endif %}
 
 {% endblock %}

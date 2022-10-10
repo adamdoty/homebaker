@@ -24,8 +24,9 @@
                             {% endif %} |
 
                             {# If coupon is treat request -> link to treat approval page so baker can approve/reject #}
-                            {% if coupon.treat.is_request %}
-                                <a href="{% url "treats:treat_request_approval" coupon.id %}">Approve Treat</a>
+                            {% if coupon.treat.is_recipient_request %}
+                                <a href="{% url "treats:treat_request_approval" %}"> Approve Treat</a>:
+                                {{ coupon.treat.title }}
                             {% elif coupon.treat %}
                                 {{ coupon.treat }}
                             {% else %}
@@ -36,7 +37,11 @@
 
                             Expires: {{ coupon.expiration_date.date }} |
 
-                            Status: {{ coupon.status }}
+                            Status: {{ coupon.status }} |
+
+                            <a href="{% url "treats:coupon_edit" coupon.id %}">Edit Coupon</a> |
+
+                            <a href="{% url "treats:coupon_delete" coupon.id %}">Delete Coupon</a>
                         </li>
                         <br>
                     </div>
