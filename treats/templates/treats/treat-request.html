@@ -6,7 +6,6 @@
 
 {% block content %}
 
-    {# treat hasnt been saved in the db yet so treat.id is nothing #}
     <form action="" method="post" class="form">
         {% csrf_token %}
         {% bootstrap_form form %}

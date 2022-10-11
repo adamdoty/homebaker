@@ -3,54 +3,91 @@
 {% load bootstrap5 %}
 
 {% block title %}Coupon Tracker{% endblock %}
+<hr>
 
 {% block content %}
-    <hr>
-    {% if coupons %}
-        <div class="container">
-            <div class="row">
-                {{ calendar }}
-            </div>
-            <ul class="list-group">
-                {% for coupon in coupons %}
-                    <div class="row">
-                        <li class="list-group-item">
-                            {{ coupon.reason|title }} |
 
-                            {% if coupon.recipient %}
-                                {{ coupon.recipient }}
-                            {% else %}
-                                <a href="{% url "treats:coupon_edit" coupon.id %}">Assign Recipient</a>
-                            {% endif %} |
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 
-                            {# If coupon is treat request -> link to treat approval page so baker can approve/reject #}
-                            {% if coupon.treat.is_recipient_request %}
-                                <a href="{% url "treats:treat_request_approval" %}"> Approve Treat</a>:
-                                {{ coupon.treat.title }}
-                            {% elif coupon.treat %}
-                                {{ coupon.treat }}
-                            {% else %}
-                                <a href="{% url "treats:coupon_edit" coupon.id %}">Assign Treat</a>
-                            {% endif %}|
+    <div class="clearfix">
+        <a class="btn btn-info left" href="{% url "treats:coupon_tracker" %} {{ previous_month }}"> Previous Month </a>
+        <a class="btn btn-info right" href="{% url "treats:coupon_tracker" %} {{ next_month }}"> Next Month </a>
+    </div>
+    {{ calendar }}
 
-                            Due Date: {{ coupon.target_date.date }} |
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        {% if coupons %}
+            {% for coupon in coupons %}
+                <div class="col">
+                    <div class="card coupon-card
+                        {% if coupon.status == "Not sent yet" %}
+                            border-warning
+                        {% elif coupon.status == "Waiting for response" %}
+                            border-primary
+                        {% elif coupon.status == "Pending Approval" %}
+                            border-warning
+                        {% elif coupon.status == "To Do" %}
+                            border-warning
+                        {% elif coupon.status == "Past Due" %}
+                            border-danger
+                        {% elif coupon.status == "Done" %}
+                            border-success
+                        {% elif coupon.status == "Expired" %}
+                            border-dark
+                        {% endif %}"
+                    >
+                        <h5 class="card-header">
+                            {{ coupon.reason|title }}
+                        </h5>
+                        <div class="card-body">
+                            <p class="card-text">
+                                Recipient:
+                                {% if coupon.recipient %}
+                                    {{ coupon.recipient }}
+                                {% else %}
+                                    <a href="{% url "treats:coupon_edit" coupon.id %}">Assign Recipient</a>
+                                {% endif %}
 
-                            Expires: {{ coupon.expiration_date.date }} |
+                                <br>
 
-                            Status: {{ coupon.status }} |
+                                Treat:
+                                {% if coupon.treat.is_recipient_request %}
+                                    <a href="{% url "treats:treat_request_approval" %}"> Approve Treat</a>:
+                                    {{ coupon.treat.title }}
+                                {% elif coupon.treat %}
+                                    {{ coupon.treat }}
+                                {% else %}
+                                    <a href="{% url "treats:coupon_edit" coupon.id %}">Assign Treat</a>
+                                {% endif %}
 
-                            <a href="{% url "treats:coupon_edit" coupon.id %}">Edit Coupon</a> |
+                                <br>
 
-                            <a href="{% url "treats:coupon_delete" coupon.id %}">Delete Coupon</a>
-                        </li>
-                        <br>
+                                Due Date: {{ coupon.target_date.date }}
+
+                                <br>
+
+                                Expires: {{ coupon.expiration_date.date }}
+
+                                <br>
+
+                                Status: {{ coupon.status }}
+                            </p>
+                            <a href="{% url "treats:coupon_edit" coupon.id %}" class="btn btn-primary">
+                                Edit Coupon
+                            </a>
+                            <a href="{% url "treats:coupon_delete" coupon.id %}" class="btn btn-primary">
+                                Delete Coupon
+                            </a>
+                        </div>
                     </div>
-                {% endfor %}
-            </ul>
-        </div>
-    {% else %}
-        <p>You have no coupons.</p>
-        <a href="{% url 'treats:coupon_new' %}">New Coupon</a>
-    {% endif %}
+                </div>
+            {% endfor %}
+
+            {#        </div>#}
+        {% else %}
+            <p>You have no coupons.</p>
+            <a href="{% url 'treats:coupon_new' %}">New Coupon</a>
+        {% endif %}
+    </div>
 
 {% endblock %}
