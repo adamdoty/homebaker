@@ -165,9 +165,6 @@ def create_user_profile(sender, instance, created, **kwargs):
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 
-
-
-
 # ---------------- Tried to autogenerate an event upon creating a coupon, couldn't quite figure it out ----------------
 
 # @receiver(post_save, sender=Coupon)
