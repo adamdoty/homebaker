@@ -70,7 +70,7 @@
                             <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
                                 {% if user.profile.is_baker_user %}
                                     <li class="w-100">
-                                        <a href="{% url 'treats:coupon_tracker' %}" class="nav-link px-0">
+                                        <a href="{% url 'treats:coupon_tracker' 'current'%}" class="nav-link px-0">
                                         <span class="d-none d-sm-inline">
                                             Coupon Tracker
                                         </span>

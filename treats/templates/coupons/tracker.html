@@ -10,8 +10,9 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 
     <div class="clearfix">
-        <a class="btn btn-info left" href="{% url "treats:coupon_tracker" %} {{ previous_month }}"> Previous Month </a>
-        <a class="btn btn-info right" href="{% url "treats:coupon_tracker" %} {{ next_month }}"> Next Month </a>
+        <a class="btn btn-info left" href="{% url "treats:coupon_tracker" 'previous' %}"> Previous Month </a>
+        <a class="btn btn-info left" href="{% url "treats:coupon_tracker" 'current' %}"> Current Month </a>
+        <a class="btn btn-info right" href="{% url "treats:coupon_tracker" 'next' %}"> Next Month </a>
     </div>
     {{ calendar }}
 

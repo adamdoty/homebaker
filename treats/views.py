@@ -30,16 +30,14 @@ def get_date(requested_day):
 def previous_month(requested_day):
     first = requested_day.replace(day=1)
     previous_month = first - timedelta(days=1)
-    month = 'month=' + str(previous_month.year) + '-' + str(previous_month.month)
-    return month
+    return previous_month
 
 
 def next_month(requested_day):
     days_in_month = calendar.monthrange(requested_day.year, requested_day.month)[1]
     last = requested_day.replace(day=days_in_month)
     next_month = last + timedelta(days=1)
-    month = 'month=' + str(next_month.year) + '-' + str(next_month.month)
-    return month
+    return next_month
 
 
 def get_next_and_previous_months(request):
@@ -222,18 +220,24 @@ def treat_request_approval(request):
 
 @user_passes_test(is_baker)
 @login_required
-def coupon_tracker(request):
+def coupon_tracker(request, month):
     d = get_date(request.GET.get('day', None))
     previous_month, next_month = get_next_and_previous_months(request)
 
-    cal = Calendar(d.year, d.month)
+    if month == "previous":
+        cal = Calendar(previous_month.year, previous_month.month)
+    elif month == "next":
+        cal = Calendar(next_month.year, next_month.month)
+    else:
+        cal = Calendar(d.year, d.month)
+
+    breakpoint()
+
     html_cal = cal.formatmonth(withyear=True)
 
     coupons = Coupon.objects.all()
     return render(request, 'coupons/tracker.html', context={'coupons': coupons,
-                                                            'calendar': mark_safe(html_cal),
-                                                            'previous_month': previous_month,
-                                                            'next_month': next_month})
+                                                            'calendar': mark_safe(html_cal)})
 
 
 @user_passes_test(is_baker)
@@ -245,7 +249,9 @@ def coupon_new(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Added coupon')
-            return redirect('treats:coupon_tracker')
+            return redirect('treats:coupon_tracker', month='current')
+        else:
+            messages.error(request, 'Failed to add coupon')
     else:
         form = CouponForm()
     return render(request, 'coupons/coupon-form.html', context={'form': form})
