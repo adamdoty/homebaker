@@ -10,4 +10,4 @@
 
 [Calendar](https://www.huiwenteo.com/normal/2018/07/24/django-calendar.html)
 
-![alt text](Homebaker_FlowChart.drawio.png)
+![alt text](docs/Homebaker_FlowChart.drawio.png)
