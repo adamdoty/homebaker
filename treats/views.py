@@ -221,6 +221,8 @@ def treat_request_approval(request):
 @user_passes_test(is_baker)
 @login_required
 def coupon_tracker(request, month):
+    coupons = Coupon.objects.all()
+
     d = get_date(request.GET.get('day', None))
     previous_month, next_month = get_next_and_previous_months(request)
 
@@ -231,11 +233,8 @@ def coupon_tracker(request, month):
     else:
         cal = Calendar(d.year, d.month)
 
-    breakpoint()
-
     html_cal = cal.formatmonth(withyear=True)
 
-    coupons = Coupon.objects.all()
     return render(request, 'coupons/tracker.html', context={'coupons': coupons,
                                                             'calendar': mark_safe(html_cal)})
 
@@ -268,7 +267,7 @@ def coupon_edit(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Coupon updated')
-            return redirect('treats:coupon_tracker')
+            return redirect('treats:coupon_tracker', month='current')
     else:
         form = CouponForm(instance=coupon)
     return render(request, 'coupons/coupon-form.html', {'coupon': coupon, 'form': form})

@@ -16,6 +16,7 @@ class Calendar(HTMLCalendar):
         - coupon fulfilled: events turns green
         - coupon expired: event turns gray
     """
+
     def __init__(self, year=None, month=None):
         self.year = year
         self.month = month
@@ -39,8 +40,6 @@ class Calendar(HTMLCalendar):
 
     def formatmonth(self, withyear=True):
         events = Coupon.objects.filter(target_date__year=self.year, target_date__month=self.month)
-
-        breakpoint()
 
         cal = f'<table border="0" cellpadding="0" cellspacing="0" class="calendar flex">'
         cal += f'{self.formatmonthname(self.year, self.month, withyear=withyear)}'

@@ -125,6 +125,8 @@ class Coupon(models.Model):
         if self.treat is not None and self.redemption_date is None:
             self.redemption_date = datetime.datetime.now()
             self.status = self.Status.TO_DO
+        elif self.treat is not None and self.redemption_date is not None:
+            self.status = self.Status.TO_DO
 
         if self.recipient and self.treat is None:
             self.status = self.Status.WAITING_FOR_RESPONSE
