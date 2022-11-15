@@ -7,7 +7,6 @@ services:
   - type: web
     name: homebaker
     plan: free
-    previewPlan: free
     env: python
     buildCommand: "./build.sh"
     startCommand: "gunicorn mysite.wsgi:application"
