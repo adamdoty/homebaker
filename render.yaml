@@ -19,3 +19,7 @@ services:
         generateValue: true
       - key: WEB_CONCURRENCY
         value: 4
+      - key: AWS_ACCESS_KEY_ID
+      - key: AWS_SECRET_ACCESS_KEY
+      - key: AWS_S3_REGION_NAME
+      - key: AWS_STORAGE_BUCKET_NAME
