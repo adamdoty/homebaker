@@ -9,7 +9,7 @@ services:
     plan: free
     env: python
     buildCommand: "./build.sh"
-    startCommand: "gunicorn mysite.wsgi:application"
+    startCommand: "gunicorn homebaker.wsgi:application"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
