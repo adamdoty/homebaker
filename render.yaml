@@ -20,6 +20,10 @@ services:
       - key: WEB_CONCURRENCY
         value: 4
       - key: AWS_ACCESS_KEY_ID
+        value: placeholder
       - key: AWS_SECRET_ACCESS_KEY
+        value: placeholder
       - key: AWS_S3_REGION_NAME
+        value: placeholder
       - key: AWS_STORAGE_BUCKET_NAME
+        value: placeholder
